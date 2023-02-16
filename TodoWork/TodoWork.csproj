@@ -6,4 +6,12 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="BLL\DTOModels\" />
+    <Folder Include="BLL\TodoServices\" />
+    <Folder Include="Domain\Entities\" />
+    <Folder Include="Domain\SQLConnection\" />
+    <Folder Include="Pages\Todo\" />
+  </ItemGroup>
+
 </Project>
