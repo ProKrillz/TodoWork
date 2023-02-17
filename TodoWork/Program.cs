@@ -1,7 +1,19 @@
-var builder = WebApplication.CreateBuilder(args);
+using Microsoft.Extensions.Configuration;
+using TodoWork.BLL.TodoServices;
+using TodoWork.Domain.SQLConnection;
 
+var builder = WebApplication.CreateBuilder(args);
+var Configuration = builder.Configuration;
 // Add services to the container.
 builder.Services.AddRazorPages();
+var connectionString = Configuration.GetConnectionString("DefaultConnection");
+
+builder.Services.AddRazorPages().Services.AddSingleton<IConnection>(new Connection(connectionString))
+.AddRazorPages().Services.AddSingleton<ITodoServices, TodoServices>();
+
+
+
+
 
 var app = builder.Build();
 

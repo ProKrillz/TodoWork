@@ -7,9 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="BLL\TodoServices\" />
-    <Folder Include="Domain\SQLConnection\" />
     <Folder Include="Pages\Todo\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.0" />
   </ItemGroup>
 
 </Project>
