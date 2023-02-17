@@ -12,9 +12,6 @@ builder.Services.AddRazorPages().Services.AddSingleton<IConnection>(new Connecti
 .AddRazorPages().Services.AddSingleton<ITodoServices, TodoServices>();
 
 
-
-
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

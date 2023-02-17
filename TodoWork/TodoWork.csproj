@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Pages\Todo\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.0" />
   </ItemGroup>
 
