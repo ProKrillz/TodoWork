@@ -14,7 +14,7 @@ namespace TodoWork.BLL.TodoServices
             Todos = _connection.GetAllTask();
         }
 
-        public void CompletTask(int id)
+        public void CompletTask(Guid id)
         {
             DTOTodo? foundTodo = Todos.Where(x => x.Id == id).FirstOrDefault();
             if (foundTodo != null)
@@ -30,7 +30,7 @@ namespace TodoWork.BLL.TodoServices
             Todos.Add(todo);
         }
 
-        public void DeleteTask(int id)
+        public void DeleteTask(Guid id)
         {
             _connection.DeleteTask(id);
             Todos.RemoveAll(x => x.Id == id);

@@ -8,7 +8,7 @@ namespace TodoWork.BLL.TodoServices
         void CreateTask(DTOTodo todo);
         void UpdateTask(DTOTodo todo);
         List<DTOTodo> GetAllTask();
-        void CompletTask(int id);
-        void DeleteTask(int id);
+        void CompletTask(Guid id);
+        void DeleteTask(Guid id);
     }
 }

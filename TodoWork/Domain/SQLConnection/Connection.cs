@@ -48,8 +48,10 @@ public class Connection : IConnection
     public void CreateTask(DTOTodo todo)
     {
         SqlCommand cmd = CallSp("AddTask");
+        cmd.Parameters.AddWithValue("@TaskId", todo.Id);
         cmd.Parameters.AddWithValue("@Titel", todo.Title);
         cmd.Parameters.AddWithValue("@Description", todo.Description);
+        cmd.Parameters.AddWithValue("@Created", todo.Created);
         try
         {
             _sqlConnection.Open();
@@ -72,11 +74,11 @@ public class Connection : IConnection
             {
                 list.Add(TodoTransferToDTOTodo(new Todo
                 {
-                    Id = myReader.GetInt32("task_id"),
+                    Id = Guid.Parse(myReader.GetString("task_id")),
                     Title = myReader.GetString("task_title"),
                     Description = myReader.GetString("task_description"),
                     TaskPriority = myReader.GetInt32("priorities_id"),
-                    CompletedDate = myReader.GetDateTime("task_completed"),
+                    CompletedDate = myReader.GetDateTime("task_created"),
                     CreatedDate = myReader.GetDateTime("task_created")
                 })) ;
             }
@@ -105,7 +107,7 @@ public class Connection : IConnection
             _sqlConnection.Close();
         }
     }
-    public void CompletTask(int id)
+    public void CompletTask(Guid id)
     {
         SqlCommand cmd = CallSp("CompletTask");
         cmd.Parameters.AddWithValue("@TaskId", id);
@@ -116,7 +118,7 @@ public class Connection : IConnection
         }
         finally { _sqlConnection.Close(); }
     }
-    public void DeleteTask(int id)
+    public void DeleteTask(Guid id)
     {
         SqlCommand cmd = CallSp("DeleteTask");
         cmd.Parameters.AddWithValue("@TaskId", id);

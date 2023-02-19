@@ -2,4 +2,9 @@
 @model TodoWork.Pages.Todo.CreateTodoModel
 @{
 }
-
+<form method="post">
+    <label asp-for="Title" />
+    <input asp-for="Title"/>
+    <input asp-for="Description"/>
+    <button asp-page-handler="Create">Opret</button>
+</form>

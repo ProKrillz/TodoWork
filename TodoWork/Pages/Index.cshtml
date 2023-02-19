@@ -3,3 +3,40 @@
 @{
     ViewData["Title"] = "Home page";
 }
+<a class="btn btn-primary" data-bs-toggle="modal" href="#exampleModalToggle" role="button">Opret</a>
+
+<form method="post">
+@foreach (var item in Model.Todos)
+{
+    <div class="form-control mt-3">
+        <input asp-for="Id" hidden="hidden" value="@item.Id"/>
+        <div class="form-label">@item.Title</div>
+        <div class="form-text">@item.Description</div>
+        <div>@Html.DisplayNameFor(x => x.Todo.TaskPriority) </div>
+        <div>@item.TaskPriority</div>
+        <div>@item.Created </div>
+        <button class="btn btn-light">Redigere</button>
+        <button class="btn btn-danger" asp-page-handler="Delete">Slet</button>
+    </div>
+}
+</form>
+
+<div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalToggleLabel">Opret Todo</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form class="" method="post">
+                    <label class="form-label">@Html.DisplayNameFor(x => x.Title)</label>
+                    <input class="form-control" asp-for="Title" />
+                    <label class="form-label">@Html.DisplayNameFor(x => x.Description)</label>
+                    <textarea class="form-control" asp-for="Description"></textarea>
+                    <button class="btn btn-primary mt-3" asp-page-handler="Create">Opret</button>                 
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

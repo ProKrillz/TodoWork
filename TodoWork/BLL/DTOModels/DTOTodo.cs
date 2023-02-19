@@ -3,11 +3,11 @@
 namespace TodoWork.BLL.DTOModels;
 public class DTOTodo
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
     [MaxLength(100)]
     public string? Title { get; set; }
     public string? Description { get; set; }
-    [Display(Name = "Priority")]
+    [Display(Name = "prioritet")]
     public Priority? TaskPriority { get; set; }
     public DateTime Created { get; set; }
     [Display(Name = "Completed")]
