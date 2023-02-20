@@ -40,7 +40,7 @@ namespace TodoWork.BLL.TodoServices
 
         public void UpdateTask(DTOTodo todo)
         {
-            DTOTodo? foundTodo = Todos.Where(x => x.Id!= todo.Id).FirstOrDefault();
+            DTOTodo? foundTodo = Todos.Where(x => x.Id == todo.Id).FirstOrDefault();
             if (foundTodo != null)
             {
                 _connection.UpdateTask(todo);

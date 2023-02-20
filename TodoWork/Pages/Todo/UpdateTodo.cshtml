@@ -1,0 +1,17 @@
+﻿@page "{id:Guid}"
+@model TodoWork.Pages.Todo.UpdateTodoModel
+@using BLL.DTOModels
+@{
+}
+<form class="form-control" method="post">
+    <input asp-for="todo.Id" hidden="hidden" />
+    <input asp-for="todo.Created" hidden="hidden"/>
+    <input asp-for="todo.Title" />
+    <input asp-for="todo.Description" />
+    <select asp-for="todo.TaskPriority">
+        <option value="High" name="todo.TaskPriority.High">High</option>
+        <option value="Medium" name="todo.TaskPriority.Medium">Medium</option>
+        <option value="Low" name="todo.TaskPriority.Low">Low</option>
+    </select>
+    <button class="btn btn-primary">Opdatere</button>
+</form>
