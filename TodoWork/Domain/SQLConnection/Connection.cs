@@ -15,6 +15,15 @@ public class Connection : IConnection
         _connectionString = connectionString;
         _sqlConnection = new SqlConnection(_connectionString);
     }
+    private Task<SqlCommand> CallSpAsync(string StoredProcedure)
+    {
+        SqlCommand spCommand = new(StoredProcedure)
+        {
+            CommandType = CommandType.StoredProcedure,
+            Connection = _sqlConnection
+        };
+        return Task.FromResult(spCommand);
+    }
     private SqlCommand CallSp(string StoredProcedure)
     {
         SqlCommand spCommand = new(StoredProcedure)
@@ -47,9 +56,9 @@ public class Connection : IConnection
             CompletedDate = todo.Completed
         };          
     }
-    public void CreateTask(DTOTodo todo)
+    public async Task CreateTaskAsync(DTOTodo todo)
     {
-        SqlCommand cmd = CallSp("AddTask");
+        SqlCommand cmd = await CallSpAsync("AddTask");
         cmd.Parameters.AddWithValue("@TaskId", todo.Id);
         cmd.Parameters.AddWithValue("@Titel", todo.Title);
         cmd.Parameters.AddWithValue("@Description", todo.Description);
@@ -64,7 +73,7 @@ public class Connection : IConnection
             _sqlConnection.Close();
         }
     }
-    public List<DTOTodo> GetAllTask()
+    public List<DTOTodo>GetAllTask()
     {
         SqlCommand cmd = CallSp("GetAllTask");
         try
@@ -117,10 +126,10 @@ public class Connection : IConnection
             _sqlConnection.Close();
         }
     }
-    public void UpdateTask(DTOTodo todox)
+    public async Task UpdateTaskAsync(DTOTodo todox)
     {
         Todo todo = DTOTodoTransferToTodo(todox);
-        SqlCommand cmd = CallSp("UpdateTask");
+        SqlCommand cmd = await CallSpAsync("UpdateTask");
         cmd.Parameters.AddWithValue("@TaskId", todo.Id);
         cmd.Parameters.AddWithValue("@Titel", todo.Title);
         cmd.Parameters.AddWithValue("@Description", todo.Description);
@@ -135,9 +144,9 @@ public class Connection : IConnection
             _sqlConnection.Close();
         }
     }
-    public void CompletTask(Guid id)
+    public async Task CompletTaskAsync(Guid id)
     {
-        SqlCommand cmd = CallSp("CompletTask");
+        SqlCommand cmd = await CallSpAsync("CompletTask");
         cmd.Parameters.AddWithValue("@TaskId", id);
         try
         {
@@ -146,9 +155,9 @@ public class Connection : IConnection
         }
         finally { _sqlConnection.Close(); }
     }
-    public void UnCompletedTask(Guid id)
+    public async Task UnCompletedTaskAsync(Guid id)
     {
-        SqlCommand cmd = CallSp("UnCompletedTask");
+        SqlCommand cmd = await CallSpAsync("UnCompletedTask");
         cmd.Parameters.AddWithValue("@TaskId", id);
         try
         {
@@ -157,9 +166,9 @@ public class Connection : IConnection
         }
         finally { _sqlConnection.Close(); }
     }
-    public void DeleteTask(Guid id)
+    public async Task DeleteTaskAsync(Guid id)
     {
-        SqlCommand cmd = CallSp("DeleteTask");
+        SqlCommand cmd = await CallSpAsync("DeleteTask");
         cmd.Parameters.AddWithValue("@TaskId", id);
         try
         {

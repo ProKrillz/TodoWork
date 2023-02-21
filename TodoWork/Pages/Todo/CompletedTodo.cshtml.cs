@@ -22,12 +22,13 @@ namespace TodoWork.Pages.Todo
         }
         public void OnPostUnCompleted()
         {
-            _todoServices.UnCompletedTask(Id);
+            _todoServices.UnCompletedTaskAsync(Id);
             CompletedTask = _todoServices.GetAllCompletedTask().OrderBy(x => x.TaskPriority).ToList();
+        
         }
         public void OnPostDelete()
-        {
-            _todoServices.DeleteCompletedTask(Id);
+        { 
+            _todoServices.DeleteCompletedTaskAsync(Id);
             CompletedTask = _todoServices.GetAllCompletedTask().OrderBy(x => x.TaskPriority).ToList();
         }
     }

@@ -4,13 +4,13 @@ namespace TodoWork.BLL.TodoServices
 {
     public interface ITodoServices
     {
-        void CreateTask(DTOTodo todo);
-        void UpdateTask(DTOTodo todo);
+        Task CreateTaskAsync(DTOTodo todo);
+        Task UpdateTaskAsync(DTOTodo todo);
         List<DTOTodo> GetAllTask();
         List<DTOTodo> GetAllCompletedTask();
-        void CompletTask(Guid id);
-        void UnCompletedTask(Guid id);
-        void DeleteTask(Guid id);
-        void DeleteCompletedTask(Guid id);
+        Task CompletTaskAsync(Guid id);
+        Task UnCompletedTaskAsync(Guid id);
+        Task DeleteTaskAsync(Guid id);
+        Task DeleteCompletedTaskAsync(Guid id);
     }
 }

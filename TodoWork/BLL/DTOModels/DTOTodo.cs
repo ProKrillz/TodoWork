@@ -21,6 +21,6 @@ public class DTOTodo
     }
     public TimeSpan GetUsedTime()
     {
-        return (this.Completed - this.Created).Value;
+        return (Completed - Created).Value;
     }
 }

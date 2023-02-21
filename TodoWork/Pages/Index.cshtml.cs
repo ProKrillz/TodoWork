@@ -31,7 +31,7 @@ namespace TodoWork.Pages
         }
         public void OnPostCreate()
         {
-            _todoServices.CreateTask(new DTOTodo()
+            _todoServices.CreateTaskAsync(new DTOTodo()
             {
                 Id = Guid.NewGuid(),
                 Title = Todo.Title,
@@ -43,14 +43,13 @@ namespace TodoWork.Pages
         }
         public void OnPostDelete()
         {
-            _todoServices.DeleteTask(Id);
+            _todoServices.DeleteTaskAsync(Id);
             Todos = _todoServices.GetAllTask().OrderBy(x => x.TaskPriority).ToList();
         }
         public void OnPostCompleted()
         {
-            _todoServices.CompletTask(Id);
-            Todos = _todoServices.GetAllTask().OrderBy(x => x.TaskPriority).ToList();
-            
+            _todoServices.CompletTaskAsync(Id);         
+            Todos = _todoServices.GetAllTask().OrderBy(x => x.TaskPriority).ToList();          
         }
     }
 }

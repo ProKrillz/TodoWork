@@ -24,7 +24,7 @@ namespace TodoWork.Pages.Todo
         {
             if (ModelState.IsValid)
             {
-                _todoServices.UpdateTask(Todo);
+                _todoServices.UpdateTaskAsync(Todo);
                 return RedirectToPage("/Index");
             }
             return Page();

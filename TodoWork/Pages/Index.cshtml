@@ -7,40 +7,19 @@
 <a class="btn btn-primary" data-bs-toggle="modal" href="#exampleModalToggle" role="button">Opret</a>
 <a class="btn btn-primary" asp-page="/Todo/CompletedTodo">Done</a>
 
-<form method="post">
-    <details class="mt-3" open>
-        <summary class="fs-4">High</summary>
-        @foreach (var item in Model.Todos.Where(x => x.TaskPriority == (DTOTodo.Priority)1))
-        {
-            <div class="form-control mt-3">
-                <div class="row">
-                    <div class="col-10">
-                        <input asp-for="Id" hidden="hidden" value="@item.Id" />
-                        <h5 class="form-label">@item.Title</h5>
-                        <div class="form-text">@item.Description</div> 
-                        <div>@item.Created </div>
-                    </div>
-                    <div class="col-sm-2 btn-group-vertical">
-                        <a class="btn btn-warning" asp-page="/Todo/UpdateTodo" asp-route-id="@item.Id">Rediger</a>
-                        <button class="btn btn-success mt-2" asp-page-handler="Completed">Færdig</button>
-                        <a class="btn btn-danger mt-2" data-bs-toggle="modal" href="#DeleteModal" role="button" data-bs-whatever="@item.Id"> Slet</a>
-                    </div>
-                </div>
-            </div>
-        }
-    </details>
 
-    <details class="fs-4 mt-3" open>
-        <summary>Medium</summary>
-        @foreach (var item in Model.Todos.Where(x => x.TaskPriority == (DTOTodo.Priority)2))
-        {
+<details class="mt-3" open>
+    <summary class="fs-4">Høj</summary>
+    @foreach (var item in Model.Todos.Where(x => x.TaskPriority == (DTOTodo.Priority)1))
+    {
+        <form method="post">
             <div class="form-control mt-3">
                 <div class="row">
                     <div class="col-10">
                         <input asp-for="Id" hidden="hidden" value="@item.Id" />
                         <h5 class="form-label">@item.Title</h5>
-                        <div class="form-text">@item.Description</div>
-                        <div>@item.Created </div>
+                        <div>@item.Description</div>
+                        <div class="form-text">@item.Created </div>
                     </div>
                     <div class="col-sm-2 btn-group-vertical">
                         <a class="btn btn-warning" asp-page="/Todo/UpdateTodo" asp-route-id="@item.Id">Rediger</a>
@@ -49,20 +28,23 @@
                     </div>
                 </div>
             </div>
-        }
-    </details>
+        </form>
+    }
+</details>
 
-    <details class="fs-4 mt-3" open>
-        <summary>Low</summary>
-        @foreach (var item in Model.Todos.Where(x => x.TaskPriority == (DTOTodo.Priority)3))
-        {
+<details class="fs-4 mt-3" open>
+    <summary>Mellem</summary>
+    @foreach (var item in Model.Todos.Where(x => x.TaskPriority == (DTOTodo.Priority)2))
+    {
+        <form method="post">
+
             <div class="form-control mt-3">
                 <div class="row">
                     <div class="col-10">
                         <input asp-for="Id" hidden="hidden" value="@item.Id" />
                         <h5 class="form-label">@item.Title</h5>
-                        <div class="form-text">@item.Description</div> 
-                        <div>@item.Created </div>
+                        <div>@item.Description</div>
+                        <div class="form-text">@item.Created </div>
                     </div>
                     <div class="col-sm-2 btn-group-vertical">
                         <a class="btn btn-warning" asp-page="/Todo/UpdateTodo" asp-route-id="@item.Id">Rediger</a>
@@ -71,26 +53,52 @@
                     </div>
                 </div>
             </div>
-        }
-    </details>
-</form>
+        </form>
+    }
+</details>
+
+<details class="fs-4 mt-3" open>
+    <summary>Lav</summary>
+    @foreach (var item in Model.Todos.Where(x => x.TaskPriority == (DTOTodo.Priority)3))
+    {
+        <form method="post">
+            <div class="form-control mt-3">
+                <div class="row">
+                    <div class="col-10">
+                        <input asp-for="Id" hidden="hidden" value="@item.Id" />
+                        <h5 class="form-label">@item.Title</h5>
+                        <div>@item.Description</div>
+                        <div class="form-text">@item.Created </div>
+                    </div>
+                    <div class="col-sm-2 btn-group-vertical">
+                        <a class="btn btn-warning" asp-page="/Todo/UpdateTodo" asp-route-id="@item.Id">Rediger</a>
+                        <button class="btn btn-success mt-2" asp-page-handler="Completed">Færdig</button>
+                        <a class="btn btn-danger mt-2" data-bs-toggle="modal" href="#DeleteModal" role="button" data-bs-whatever="@item.Id"> Slet</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    }
+</details>
 
 <div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalToggleLabel">Opret Todo</h5>
+                <h5 class="modal-title" id="exampleModalToggleLabel">Opret opgave</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <form method="post">
+            <form method="post">
+                <div class="modal-body">
                     <label class="form-label">@Html.DisplayNameFor(x => x.Todo.Title)</label>
                     <input class="form-control" asp-for="Todo.Title" required />
                     <label class="form-label">@Html.DisplayNameFor(x => x.Todo.Description)</label>
                     <textarea class="form-control" asp-for="Todo.Description" required></textarea>
+                </div>
+                <div class="modal-footer">
                     <button class="btn btn-primary mt-3" asp-page-handler="Create">Opret</button>
-                </form>
-            </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -99,17 +107,18 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalToggleLabel">Slet todo</h5>
+                <h5 class="modal-title" id="exampleModalToggleLabel">Slet opgave</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <form method="post">
-                    <div>Vil du slette denne fil</div> 
-                    <input id="recipient-name" asp-for="Id" hidden/>
+            <form method="post">
+                <div class="modal-body">
+                    <div>Vil du slette denne fil?</div>
+                    <input id="recipient-name" asp-for="Id" hidden />
+                </div>
+                <div class="modal-footer">
                     <button class="btn btn-success" asp-page-handler="Delete">Ja</button>
-                    <button class="btn btn-secondary" data-bs-dismiss="modal">Nej</button>
-                </form>
-            </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>

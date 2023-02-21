@@ -16,60 +16,65 @@ namespace TodoWork.BLL.TodoServices
             CompletedTodos = _connection.GetAllCompletedTask();
         }
 
-        public void CompletTask(Guid id)
+        public async Task CompletTaskAsync(Guid id)
         {
             DTOTodo? foundTodo = Todos.Where(x => x.Id == id).FirstOrDefault();
             if (foundTodo != null)
             {
-                _connection.CompletTask(id);
+                Task task = Task.Run(() => _connection.CompletTaskAsync(id));
                 foundTodo.Completed = DateTime.Now;
-                //foundTodo.UsedTime = (foundTodo.Completed - foundTodo.Created).Value;
                 CompletedTodos.Add(foundTodo);
                 Todos.RemoveAll(x => x.Id == id);
+                await task;
             }
         }
-        public void UnCompletedTask(Guid id)
+        public async Task UnCompletedTaskAsync(Guid id)
         {
             DTOTodo? foundTodo = CompletedTodos.Where(x => x.Id == id).FirstOrDefault();
             if (foundTodo != null)
             {
-                _connection.UnCompletedTask(id);
+                Task task = Task.Run(() => _connection.UnCompletedTaskAsync(id));
                 foundTodo.Completed = null;
                 Todos.Add(foundTodo);
                 CompletedTodos.RemoveAll(x => x.Id == id);
+                await task;
             }
         }
 
-        public void CreateTask(DTOTodo todo)
+        public async Task CreateTaskAsync(DTOTodo todo)
         {
-            _connection.CreateTask(todo);
+            Task task = Task.Run(() => _connection.CreateTaskAsync(todo));
             Todos.Add(todo);
+            await task;
         }
 
-        public void DeleteTask(Guid id)
+        public async Task DeleteTaskAsync(Guid id)
         {
-            _connection.DeleteTask(id);
+            Task task = Task.Run(() => _connection.DeleteTaskAsync(id));
             Todos.RemoveAll(x => x.Id == id);
+            await task;
         }
-        public void DeleteCompletedTask(Guid id)
+        public async Task DeleteCompletedTaskAsync(Guid id)
         {
-            _connection.DeleteTask(id);
+            Task task = Task.Run(() => _connection.DeleteTaskAsync(id));
             CompletedTodos.RemoveAll(x => x.Id == id);
+            await task;
         }
 
         public List<DTOTodo> GetAllTask() => Todos;
 
         public List<DTOTodo> GetAllCompletedTask() => CompletedTodos;
 
-        public void UpdateTask(DTOTodo todo)
+        public async Task UpdateTaskAsync(DTOTodo todo)
         {
             DTOTodo? foundTodo = Todos.Where(x => x.Id == todo.Id).FirstOrDefault();
             if (foundTodo != null)
             {
-                _connection.UpdateTask(todo);
+                Task task = Task.Run(() => _connection.UpdateTaskAsync(todo));
                 foundTodo.Title = todo.Title;
                 foundTodo.Description = todo.Description;
                 foundTodo.TaskPriority = todo.TaskPriority;
+                await task;
             }
         }
     }
