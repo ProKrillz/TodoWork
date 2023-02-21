@@ -19,4 +19,8 @@ public class DTOTodo
         Medium = 2,
         Low = 3,
     }
+    public TimeSpan GetUsedTime()
+    {
+        return (this.Completed - this.Created).Value;
+    }
 }

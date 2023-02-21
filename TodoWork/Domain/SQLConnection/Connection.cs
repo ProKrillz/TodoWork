@@ -32,7 +32,9 @@ public class Connection : IConnection
             Description = todo.Description, 
             TaskPriority = (Priority)todo.TaskPriority, 
             Created = todo.CreatedDate, 
-            Completed = todo.CompletedDate };
+            Completed = todo.CompletedDate  
+        };
+            
     }
     private Todo DTOTodoTransferToTodo(DTOTodo todo)
     {
@@ -105,7 +107,7 @@ public class Connection : IConnection
                     Description = myReader.GetString("task_description"),
                     TaskPriority = myReader.GetInt32("priorities_id"),
                     CompletedDate = myReader.GetDateTime("task_completed"),
-                    CreatedDate = myReader.GetDateTime("task_created")
+                    CreatedDate = myReader.GetDateTime("task_created")            
                 }));
             }
             return list;

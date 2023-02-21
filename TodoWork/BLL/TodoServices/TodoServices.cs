@@ -23,6 +23,7 @@ namespace TodoWork.BLL.TodoServices
             {
                 _connection.CompletTask(id);
                 foundTodo.Completed = DateTime.Now;
+                //foundTodo.UsedTime = (foundTodo.Completed - foundTodo.Created).Value;
                 CompletedTodos.Add(foundTodo);
                 Todos.RemoveAll(x => x.Id == id);
             }
