@@ -15,7 +15,7 @@ namespace TodoWork.Pages.Todo
         [BindProperty(SupportsGet = true)]
         public Guid id { get; set; }
         [BindProperty]
-        public DTOTodo Todo { get; set; }
+        public DTOTodo? Todo { get; set; }
         public void OnGet()
         {
             Todo = _todoServices.GetAllTask().Find(x => x.Id == id);

@@ -3,18 +3,23 @@
 @using BLL.DTOModels
 @{
 }
-<form class="form-control" method="post">
-    <input asp-for="Todo.Id" hidden="hidden" />
-    <input asp-for="Todo.Created" hidden="hidden"/>
-    <label class="form-label">@Html.DisplayNameFor(x => x.Todo.Title)</label>
-    <input asp-for="Todo.Title" />
-    <label class="form-label">@Html.DisplayNameFor(x => x.Todo.Description)</label>
-    <input asp-for="Todo.Description" />
-    <label class="form-label">@Html.DisplayNameFor(x => x.Todo.TaskPriority)</label>
-    <select asp-for="Todo.TaskPriority">
-        <option value="High" name="todo.TaskPriority.High">High</option>
-        <option value="Medium" name="todo.TaskPriority.Medium">Medium</option>
-        <option value="Low" name="todo.TaskPriority.Low">Low</option>
-    </select>
-    <button class="btn btn-primary">Opdatere</button>
-</form>
+<div class="d-flex justify-content-center mt-5">
+    <form class="form-control w-50" method="post">
+        <h4>Rediger todo</h4>
+        <input asp-for="Todo.Id" hidden="hidden" />
+        <input asp-for="Todo.Created" hidden="hidden" />
+        <label class="form-label">@Html.DisplayNameFor(x => x.Todo.Title)</label>
+        <input class="form-control" asp-for="Todo.Title" />
+        <label class="form-label">@Html.DisplayNameFor(x => x.Todo.Description)</label>
+        <textarea class="form-control" asp-for="Todo.Description"></textarea>
+        <label class="form-label me-3">@Html.DisplayNameFor(x => x.Todo.TaskPriority)</label>
+        <select class="mt-2" asp-for="Todo.TaskPriority">
+            <option value="High" name="todo.TaskPriority.High">High</option>
+            <option value="Medium" name="todo.TaskPriority.Medium">Medium</option>
+            <option value="Low" name="todo.TaskPriority.Low">Low</option>
+        </select>
+        <div class="d-flex justify-content-center mb-2">
+            <button class="btn btn-primary">Opdatere</button>
+        </div>
+    </form>
+</div>
