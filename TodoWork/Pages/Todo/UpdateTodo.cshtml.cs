@@ -15,16 +15,16 @@ namespace TodoWork.Pages.Todo
         [BindProperty(SupportsGet = true)]
         public Guid id { get; set; }
         [BindProperty]
-        public DTOTodo todo { get; set; }
+        public DTOTodo Todo { get; set; }
         public void OnGet()
         {
-            todo = _todoServices.GetAllTask().Find(x => x.Id == id);
+            Todo = _todoServices.GetAllTask().Find(x => x.Id == id);
         }
         public IActionResult OnPost()
         {
             if (ModelState.IsValid)
             {
-                _todoServices.UpdateTask(todo);
+                _todoServices.UpdateTask(Todo);
                 return RedirectToPage("/Index");
             }
             return Page();

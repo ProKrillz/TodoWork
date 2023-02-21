@@ -7,8 +7,10 @@ namespace TodoWork.Domain.SQLConnection
     {
         void CreateTask(DTOTodo todo);
         List<DTOTodo> GetAllTask();
+        List<DTOTodo> GetAllCompletedTask();
         void UpdateTask(DTOTodo todox);
         void CompletTask(Guid id);
+        void UnCompletedTask(Guid id);
         void DeleteTask(Guid id);
     }
 }

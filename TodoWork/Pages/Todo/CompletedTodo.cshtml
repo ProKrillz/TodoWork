@@ -1,0 +1,26 @@
+﻿@page
+@model TodoWork.Pages.Todo.CompletedTodoModel
+@{
+}
+
+<form method="post">
+    @foreach (var item in Model.CompletedTask)
+    {
+        <div class="form-control mt-3">
+            <div class="row">
+                <div class="col-10">
+                    <input asp-for="Id" hidden="hidden" value="@item.Id" />
+                    <h5 class="form-label">@item.Title</h5>
+                    <div class="form-text">@item.Description</div>
+                    <div>@item.Created </div>
+                    <div>@item.Completed</div>
+                </div>
+                <div class="col-2 btn-group-vertical">
+                    <a class="btn btn-warning" asp-page="/Todo/UpdateTodo" asp-route-id="@item.Id">Rediger</a>
+                    <button class="btn btn-success mt-2" asp-page-handler="UnCompleted">Genopret</button>
+                    <a class="btn btn-danger mt-2" data-bs-toggle="modal" href="#DeleteModal" role="button" data-bs-whatever="@item.Id"> Slet</a>
+                </div>
+            </div>
+        </div>
+    }
+</form>

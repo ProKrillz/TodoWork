@@ -12,7 +12,7 @@ public class DTOTodo
     public Priority? TaskPriority { get; set; }
     public DateTime Created { get; set; }
     [Display(Name = "Completed")]
-    public DateTime Completed { get; set; }
+    public DateTime? Completed { get; set; }
     public enum Priority
     {
         High = 1,

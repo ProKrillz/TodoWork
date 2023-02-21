@@ -50,7 +50,7 @@ namespace TodoWork.Pages
         {
             _todoServices.CompletTask(Id);
             Todos = _todoServices.GetAllTask().OrderBy(x => x.TaskPriority).ToList();
-
+            
         }
     }
 }

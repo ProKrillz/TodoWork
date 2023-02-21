@@ -7,6 +7,6 @@ public class Todo
     public string? Description { get; set; }
     public int? TaskPriority { get; set; }
     public DateTime CreatedDate { get; set; }
-    public DateTime CompletedDate { get; set; }
+    public DateTime? CompletedDate { get; set; }
 }
 

@@ -78,9 +78,35 @@ public class Connection : IConnection
                     Title = myReader.GetString("task_title"),
                     Description = myReader.GetString("task_description"),
                     TaskPriority = myReader.GetInt32("priorities_id"),
-                    CompletedDate = myReader.GetDateTime("task_created"),
                     CreatedDate = myReader.GetDateTime("task_created")
                 })) ;
+            }
+            return list;
+        }
+        finally
+        {
+            _sqlConnection.Close();
+        }
+    }
+    public List<DTOTodo> GetAllCompletedTask()
+    {
+        SqlCommand cmd = CallSp("GetAllCompletedTask");
+        try
+        {
+            _sqlConnection.Open();
+            SqlDataReader myReader = cmd.ExecuteReader();
+            List<DTOTodo> list = new List<DTOTodo>();
+            while (myReader.Read())
+            {
+                list.Add(TodoTransferToDTOTodo(new Todo
+                {
+                    Id = Guid.Parse(myReader.GetString("task_id")),
+                    Title = myReader.GetString("task_title"),
+                    Description = myReader.GetString("task_description"),
+                    TaskPriority = myReader.GetInt32("priorities_id"),
+                    CompletedDate = myReader.GetDateTime("task_completed"),
+                    CreatedDate = myReader.GetDateTime("task_created")
+                }));
             }
             return list;
         }
@@ -110,6 +136,17 @@ public class Connection : IConnection
     public void CompletTask(Guid id)
     {
         SqlCommand cmd = CallSp("CompletTask");
+        cmd.Parameters.AddWithValue("@TaskId", id);
+        try
+        {
+            _sqlConnection.Open();
+            cmd.ExecuteNonQuery();
+        }
+        finally { _sqlConnection.Close(); }
+    }
+    public void UnCompletedTask(Guid id)
+    {
+        SqlCommand cmd = CallSp("UnCompletedTask");
         cmd.Parameters.AddWithValue("@TaskId", id);
         try
         {
