@@ -50,6 +50,11 @@ namespace TodoWork.BLL.TodoServices
             _connection.DeleteTask(id);
             Todos.RemoveAll(x => x.Id == id);
         }
+        public void DeleteCompletedTask(Guid id)
+        {
+            _connection.DeleteTask(id);
+            CompletedTodos.RemoveAll(x => x.Id == id);
+        }
 
         public List<DTOTodo> GetAllTask() => Todos;
 

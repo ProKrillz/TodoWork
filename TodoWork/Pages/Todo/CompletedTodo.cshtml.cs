@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using TodoWork.BLL.DTOModels;
 using TodoWork.BLL.TodoServices;
+using TodoWork.Domain.Entities;
 
 namespace TodoWork.Pages.Todo
 {
@@ -22,7 +23,12 @@ namespace TodoWork.Pages.Todo
         public void OnPostUnCompleted()
         {
             _todoServices.UnCompletedTask(Id);
-            CompletedTask = _todoServices.GetAllCompletedTask();
+            CompletedTask = _todoServices.GetAllCompletedTask().OrderBy(x => x.TaskPriority).ToList();
+        }
+        public void OnPostDelete()
+        {
+            _todoServices.DeleteCompletedTask(Id);
+            CompletedTask = _todoServices.GetAllCompletedTask().OrderBy(x => x.TaskPriority).ToList();
         }
     }
 }

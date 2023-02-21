@@ -1,5 +1,4 @@
 ﻿using TodoWork.BLL.DTOModels;
-using TodoWork.Domain.Entities;
 
 namespace TodoWork.BLL.TodoServices
 {
@@ -12,5 +11,6 @@ namespace TodoWork.BLL.TodoServices
         void CompletTask(Guid id);
         void UnCompletedTask(Guid id);
         void DeleteTask(Guid id);
+        void DeleteCompletedTask(Guid id);
     }
 }
