@@ -26,30 +26,33 @@ namespace TodoWork.Pages
 
         public void OnGet()
         {
-            Todos = _todoServices.GetAllTask()
-                .OrderBy(x => x.TaskPriority).ToList();
+            Todos = _todoServices.GetAllTask();
         }
         public void OnPostCreate()
         {
-            _todoServices.CreateTaskAsync(new DTOTodo()
+            if (ModelState.IsValid)
             {
-                Id = Guid.NewGuid(),
-                Title = Todo.Title,
-                Description = Todo.Description,
-                TaskPriority = (DTOTodo.Priority)2,
-                Created = DateTime.Now,
-            });
-            Todos = _todoServices.GetAllTask().OrderBy(x => x.TaskPriority).ToList();
+                _todoServices.CreateTaskAsync(new DTOTodo()
+                {
+                    Id = Guid.NewGuid(),
+                    Title = Todo.Title,
+                    Description = Todo.Description,
+                    TaskPriority = Todo.TaskPriority,
+                    Created = DateTime.Now,
+                });
+                Todos = _todoServices.GetAllTask();
+
+            }
         }
         public void OnPostDelete()
         {
             _todoServices.DeleteTaskAsync(Id);
-            Todos = _todoServices.GetAllTask().OrderBy(x => x.TaskPriority).ToList();
+            Todos = _todoServices.GetAllTask();
         }
         public void OnPostCompleted()
         {
-            _todoServices.CompletTaskAsync(Id);         
-            Todos = _todoServices.GetAllTask().OrderBy(x => x.TaskPriority).ToList();          
+            _todoServices.CompletTaskAsync(Id);
+            Todos = _todoServices.GetAllTask();
         }
     }
 }

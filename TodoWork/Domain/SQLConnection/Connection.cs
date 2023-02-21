@@ -15,6 +15,11 @@ public class Connection : IConnection
         _connectionString = connectionString;
         _sqlConnection = new SqlConnection(_connectionString);
     }
+    /// <summary>
+    /// Create Stored Procedure Async
+    /// </summary>
+    /// <param name="StoredProcedure"></param>
+    /// <returns></returns>
     private Task<SqlCommand> CallSpAsync(string StoredProcedure)
     {
         SqlCommand spCommand = new(StoredProcedure)
@@ -24,6 +29,11 @@ public class Connection : IConnection
         };
         return Task.FromResult(spCommand);
     }
+    /// <summary>
+    /// Create Stored Procedure Async
+    /// </summary>
+    /// <param name="StoredProcedure"></param>
+    /// <returns></returns>
     private SqlCommand CallSp(string StoredProcedure)
     {
         SqlCommand spCommand = new(StoredProcedure)
@@ -33,6 +43,11 @@ public class Connection : IConnection
         };
         return spCommand;
     }
+    /// <summary>
+    /// Transfer object
+    /// </summary>
+    /// <param name="todo"></param>
+    /// <returns></returns>
     private DTOTodo TodoTransferToDTOTodo(Todo todo)
     {
         return new DTOTodo() { 
@@ -42,9 +57,13 @@ public class Connection : IConnection
             TaskPriority = (Priority)todo.TaskPriority, 
             Created = todo.CreatedDate, 
             Completed = todo.CompletedDate  
-        };
-            
+        };      
     }
+    /// <summary>
+    /// Transfer object
+    /// </summary>
+    /// <param name="todo"></param>
+    /// <returns></returns>
     private Todo DTOTodoTransferToTodo(DTOTodo todo)
     {
         return new Todo() { 
@@ -56,13 +75,15 @@ public class Connection : IConnection
             CompletedDate = todo.Completed
         };          
     }
-    public async Task CreateTaskAsync(DTOTodo todo)
+    public async Task CreateTaskAsync(DTOTodo dtoTodo)
     {
+        Todo todo = DTOTodoTransferToTodo(dtoTodo);
         SqlCommand cmd = await CallSpAsync("AddTask");
         cmd.Parameters.AddWithValue("@TaskId", todo.Id);
         cmd.Parameters.AddWithValue("@Titel", todo.Title);
         cmd.Parameters.AddWithValue("@Description", todo.Description);
-        cmd.Parameters.AddWithValue("@Created", todo.Created);
+        cmd.Parameters.AddWithValue("@Priorities", todo.TaskPriority);
+        cmd.Parameters.AddWithValue("@Created", todo.CreatedDate);
         try
         {
             _sqlConnection.Open();

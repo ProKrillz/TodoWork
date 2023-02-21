@@ -2,27 +2,25 @@
 @model IndexModel
 @using BLL.DTOModels
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Hjem";
 }
 <a class="btn btn-primary" data-bs-toggle="modal" href="#exampleModalToggle" role="button">Opret</a>
-<a class="btn btn-primary" asp-page="/Todo/CompletedTodo">Done</a>
-
 
 <details class="mt-3" open>
-    <summary class="fs-4">Høj</summary>
+    <summary class="bg-danger text-light rounded fs-4 ps-3">Høj</summary>
     @foreach (var item in Model.Todos.Where(x => x.TaskPriority == (DTOTodo.Priority)1))
     {
         <form method="post">
             <div class="form-control mt-3">
                 <div class="row">
-                    <div class="col-10">
+                    <div class="col-10 position-relative">
                         <input asp-for="Id" hidden="hidden" value="@item.Id" />
                         <h5 class="form-label">@item.Title</h5>
-                        <div>@item.Description</div>
-                        <div class="form-text">@item.Created </div>
+                        <div class="mb-4">@item.Description</div>
+                        <div class="form-text position-absolute bottom-0">@Html.DisplayNameFor(x => x.Todo.Created): @item.Created </div>
                     </div>
                     <div class="col-sm-2 btn-group-vertical">
-                        <a class="btn btn-warning" asp-page="/Todo/UpdateTodo" asp-route-id="@item.Id">Rediger</a>
+                        <a class="btn btn-info" asp-page="/Todo/UpdateTodo" asp-route-id="@item.Id">Rediger</a>
                         <button class="btn btn-success mt-2" asp-page-handler="Completed">Færdig</button>
                         <a class="btn btn-danger mt-2" data-bs-toggle="modal" href="#DeleteModal" role="button" data-bs-whatever="@item.Id"> Slet</a>
                     </div>
@@ -33,21 +31,20 @@
 </details>
 
 <details class="fs-4 mt-3" open>
-    <summary>Mellem</summary>
+    <summary class="bg-orange text-light rounded ps-3">Mellem</summary>
     @foreach (var item in Model.Todos.Where(x => x.TaskPriority == (DTOTodo.Priority)2))
     {
         <form method="post">
-
             <div class="form-control mt-3">
                 <div class="row">
-                    <div class="col-10">
+                    <div class="col-10 position-relative">
                         <input asp-for="Id" hidden="hidden" value="@item.Id" />
                         <h5 class="form-label">@item.Title</h5>
-                        <div>@item.Description</div>
-                        <div class="form-text">@item.Created </div>
+                        <div class="mb-4">@item.Description</div>
+                        <div class="form-text position-absolute bottom-0">@Html.DisplayNameFor(x => x.Todo.Created): @item.Created </div>
                     </div>
                     <div class="col-sm-2 btn-group-vertical">
-                        <a class="btn btn-warning" asp-page="/Todo/UpdateTodo" asp-route-id="@item.Id">Rediger</a>
+                        <a class="btn btn-info" asp-page="/Todo/UpdateTodo" asp-route-id="@item.Id">Rediger</a>
                         <button class="btn btn-success mt-2" asp-page-handler="Completed">Færdig</button>
                         <a class="btn btn-danger mt-2" data-bs-toggle="modal" href="#DeleteModal" role="button" data-bs-whatever="@item.Id"> Slet</a>
                     </div>
@@ -58,20 +55,20 @@
 </details>
 
 <details class="fs-4 mt-3" open>
-    <summary>Lav</summary>
+    <summary class="bg-success rounded text-light ps-3">Lav</summary>
     @foreach (var item in Model.Todos.Where(x => x.TaskPriority == (DTOTodo.Priority)3))
     {
         <form method="post">
             <div class="form-control mt-3">
                 <div class="row">
-                    <div class="col-10">
+                    <div class="col-10 position-relative">
                         <input asp-for="Id" hidden="hidden" value="@item.Id" />
                         <h5 class="form-label">@item.Title</h5>
-                        <div>@item.Description</div>
-                        <div class="form-text">@item.Created </div>
+                        <div class="mb-4">@item.Description</div>
+                        <div class="form-text position-absolute bottom-0">@Html.DisplayNameFor(x => x.Todo.Created): @item.Created </div>
                     </div>
                     <div class="col-sm-2 btn-group-vertical">
-                        <a class="btn btn-warning" asp-page="/Todo/UpdateTodo" asp-route-id="@item.Id">Rediger</a>
+                        <a class="btn btn-info" asp-page="/Todo/UpdateTodo" asp-route-id="@item.Id">Rediger</a>
                         <button class="btn btn-success mt-2" asp-page-handler="Completed">Færdig</button>
                         <a class="btn btn-danger mt-2" data-bs-toggle="modal" href="#DeleteModal" role="button" data-bs-whatever="@item.Id"> Slet</a>
                     </div>
@@ -91,9 +88,15 @@
             <form method="post">
                 <div class="modal-body">
                     <label class="form-label">@Html.DisplayNameFor(x => x.Todo.Title)</label>
-                    <input class="form-control" asp-for="Todo.Title" required />
+                    <input class="form-control" asp-for="Todo.Title" required/>
                     <label class="form-label">@Html.DisplayNameFor(x => x.Todo.Description)</label>
                     <textarea class="form-control" asp-for="Todo.Description" required></textarea>
+                    <label class="form-label me-3">@Html.DisplayNameFor(x => x.Todo.TaskPriority)</label>
+                    <select class="mt-4" asp-for="Todo.TaskPriority">
+                        <option value="High" name="todo.TaskPriority.High">Høj</option>
+                        <option value="Medium" name="todo.TaskPriority.Medium" selected="selected">Mellem</option>
+                        <option value="Low" name="todo.TaskPriority.Low">Lav</option>
+                    </select>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-primary mt-3" asp-page-handler="Create">Opret</button>

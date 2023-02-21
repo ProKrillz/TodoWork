@@ -16,3 +16,9 @@ html {
 body {
   margin-bottom: 60px;
 }
+.bg-orange{
+    background-color: orange;
+}
+details > summary {
+    list-style: none;
+}
