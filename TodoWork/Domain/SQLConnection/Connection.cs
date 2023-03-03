@@ -75,26 +75,7 @@ public class Connection : IConnection
             CompletedDate = todo.Completed
         };          
     }
-    public async Task CreateTaskAsync(DTOTodo dtoTodo)
-    {
-        Todo todo = DTOTodoTransferToTodo(dtoTodo);
-        SqlCommand cmd = await CallSpAsync("AddTask");
-        cmd.Parameters.AddWithValue("@TaskId", todo.Id);
-        cmd.Parameters.AddWithValue("@Titel", todo.Title);
-        cmd.Parameters.AddWithValue("@Description", todo.Description);
-        cmd.Parameters.AddWithValue("@Priorities", todo.TaskPriority);
-        cmd.Parameters.AddWithValue("@Created", todo.CreatedDate);
-        try
-        {
-            _sqlConnection.Open();
-            cmd.ExecuteNonQuery();
-        }
-        finally
-        {
-            _sqlConnection.Close();
-        }
-    }
-    public List<DTOTodo>GetAllTask()
+    public List<DTOTodo> GetAllTask()
     {
         SqlCommand cmd = CallSp("GetAllTask");
         try
@@ -111,7 +92,7 @@ public class Connection : IConnection
                     Description = myReader.GetString("task_description"),
                     TaskPriority = myReader.GetInt32("priorities_id"),
                     CreatedDate = myReader.GetDateTime("task_created")
-                })) ;
+                }));
             }
             return list;
         }
@@ -137,10 +118,29 @@ public class Connection : IConnection
                     Description = myReader.GetString("task_description"),
                     TaskPriority = myReader.GetInt32("priorities_id"),
                     CompletedDate = myReader.GetDateTime("task_completed"),
-                    CreatedDate = myReader.GetDateTime("task_created")            
+                    CreatedDate = myReader.GetDateTime("task_created")
                 }));
             }
             return list;
+        }
+        finally
+        {
+            _sqlConnection.Close();
+        }
+    }
+    public async Task CreateTaskAsync(DTOTodo dtoTodo)
+    {
+        Todo todo = DTOTodoTransferToTodo(dtoTodo);
+        SqlCommand cmd = await CallSpAsync("AddTask");
+        cmd.Parameters.AddWithValue("@TaskId", todo.Id);
+        cmd.Parameters.AddWithValue("@Titel", todo.Title);
+        cmd.Parameters.AddWithValue("@Description", todo.Description);
+        cmd.Parameters.AddWithValue("@Priorities", todo.TaskPriority);
+        cmd.Parameters.AddWithValue("@Created", todo.CreatedDate);
+        try
+        {
+            _sqlConnection.Open();
+            cmd.ExecuteNonQuery();
         }
         finally
         {
@@ -176,17 +176,6 @@ public class Connection : IConnection
         }
         finally { _sqlConnection.Close(); }
     }
-    public async Task UnCompletedTaskAsync(Guid id)
-    {
-        SqlCommand cmd = await CallSpAsync("UnCompletedTask");
-        cmd.Parameters.AddWithValue("@TaskId", id);
-        try
-        {
-            _sqlConnection.Open();
-            cmd.ExecuteNonQuery();
-        }
-        finally { _sqlConnection.Close(); }
-    }
     public async Task DeleteTaskAsync(Guid id)
     {
         SqlCommand cmd = await CallSpAsync("DeleteTask");
@@ -198,4 +187,16 @@ public class Connection : IConnection
         }
         finally { _sqlConnection.Close(); }
     }
+    public async Task UnCompletedTaskAsync(Guid id)
+    {
+        SqlCommand cmd = await CallSpAsync("UnCompletedTask");
+        cmd.Parameters.AddWithValue("@TaskId", id);
+        try
+        {
+            _sqlConnection.Open();
+            cmd.ExecuteNonQuery();
+        }
+        finally { _sqlConnection.Close(); }
+    }
+
 }

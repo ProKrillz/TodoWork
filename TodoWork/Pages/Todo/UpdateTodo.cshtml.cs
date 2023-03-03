@@ -21,7 +21,7 @@ public class UpdateTodoModel : PageModel
         if (Todo != null)
             return Page();
 
-        return RedirectToPage("/Index");
+        return RedirectToPage("/Error/NotFound");
     }
     public IActionResult OnPost()
     {

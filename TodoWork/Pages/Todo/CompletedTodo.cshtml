@@ -2,106 +2,32 @@
 @using TodoWork.BLL.DTOModels;
 @model TodoWork.Pages.Todo.CompletedTodoModel
 @{
+    ViewData["Title"] = "Færdig opgaver";
 }
 <h4>Færdige opgaver</h4>
 
 <details class="mt-3" open>
     <summary class="bg-danger text-light rounded fs-4 ps-3">Høj</summary>
-    @foreach (var item in Model.CompletedTask.Where(x => x.TaskPriority == (DTOTodo.Priority)1))
+    @foreach (DTOTodo item in Model.CompletedTask.Where(x => x.TaskPriority == (DTOTodo.Priority)1))
     {
-        <form method="post">
-            <div class="form-control mt-3">
-                <div class="row">
-                    <div class="col-10">
-                        <input asp-for="Id" hidden="hidden" value="@item.Id" />
-                        <h5 class="form-label">@item.Title</h5>
-                        <div class="">@item.Description</div>
-                        <div class="form-text">Brugt tid: @item.GetUsedTime().Days dage @item.GetUsedTime().ToString("h'h 'm'm 's's'")</div>
-                        <div class="row justify-content-start">
-                            <div class="form-text col-lg-4">Oprettet: @item.Created </div>
-                            <div class="form-text col-lg-4">Færdig: @item.Completed</div>
-                        </div>
-                    </div>
-                    <div class="col-md-2 btn-group-vertical">
-                        <button class="btn btn-success btn-h" asp-page-handler="UnCompleted">Genopret</button>
-                        <a class="btn btn-danger mt-2 btn-h" data-bs-toggle="modal" href="#DeleteModal" role="button" data-bs-whatever="@item.Id"> Slet</a>
-                    </div>
-                </div>
-            </div>
-        </form>
+        @await Component.InvokeAsync("CompletedTask", item)
     }
 </details>
 
 <details class="mt-3" open>
     <summary class="bg-orange text-light rounded ps-3 fs-4">Mellem</summary>
-    @foreach (var item in Model.CompletedTask.Where(x => x.TaskPriority == (DTOTodo.Priority)2))
+    @foreach (DTOTodo item in Model.CompletedTask.Where(x => x.TaskPriority == (DTOTodo.Priority)2))
     {
-        <form method="post">
-            <div class="form-control mt-3">
-                <div class="row">
-                    <div class="col-10">
-                        <input asp-for="Id" hidden="hidden" value="@item.Id" />
-                        <h5 class="form-label">@item.Title</h5>
-                        <div class="">@item.Description</div>
-                        <div class="form-text">Brugt tid: @item.GetUsedTime().Days dage @item.GetUsedTime().ToString("h'h 'm'm 's's'")</div>
-                        <div class="row justify-content-start">
-                            <div class="form-text col-lg-4">Oprettet: @item.Created </div>
-                            <div class="form-text col-lg-4">Færdig: @item.Completed</div>
-                        </div>
-                    </div>
-                    <div class="col-md-2 btn-group-vertical">
-                        <button class="btn btn-success btn-h" asp-page-handler="UnCompleted">Genopret</button>
-                        <a class="btn btn-danger mt-2 btn-h" data-bs-toggle="modal" href="#DeleteModal" role="button" data-bs-whatever="@item.Id"> Slet</a>
-                    </div>
-                </div>
-            </div>
-        </form>
+        @await Component.InvokeAsync("CompletedTask", item)
     }
 </details>
 
 <details class="mt-3" open>
     <summary class="bg-success rounded text-light ps-3 fs-4">Lav</summary>
-    @foreach (var item in Model.CompletedTask.Where(x => x.TaskPriority == (DTOTodo.Priority)3))
+    @foreach (DTOTodo item in Model.CompletedTask.Where(x => x.TaskPriority == (DTOTodo.Priority)3))
     {
-        <form method="post">
-            <div class="form-control mt-3">
-                <div class="row">
-                    <div class="col-10">
-                        <input asp-for="Id" hidden="hidden" value="@item.Id" />
-                        <h5 class="form-label">@item.Title</h5>
-                        <div class="">@item.Description</div>
-                        <div class="form-text">Brugt tid: @item.GetUsedTime().Days dage @item.GetUsedTime().ToString("h'h 'm'm 's's'")</div>
-                        <div class="row justify-content-start">
-                            <div class="form-text col-lg-4">Oprettet: @item.Created </div>
-                            <div class="form-text col-lg-4">Færdig: @item.Completed</div>
-                        </div>
-                    </div>
-                    <div class="col-md-2 btn-group-vertical">
-                        <button class="btn btn-success btn-h" asp-page-handler="UnCompleted">Genopret</button>
-                        <a class="btn btn-danger mt-2 btn-h" data-bs-toggle="modal" href="#DeleteModal" role="button" data-bs-whatever="@item.Id"> Slet</a>
-                    </div>
-                </div>
-            </div>
-        </form>
+        @await Component.InvokeAsync("CompletedTask", item)
     }
 </details>
 
-<div class="modal fade" id="DeleteModal" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalToggleLabel">Slet todo</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <form method="post">
-                <div class="modal-body">
-                    <div>Vil du slette denne fil?</div>
-                    <input id="recipient-name" asp-for="Id" hidden />
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-success" asp-page-handler="Delete">Ja</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
+@await Component.InvokeAsync("ModalDelete")
