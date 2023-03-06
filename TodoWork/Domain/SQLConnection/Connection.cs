@@ -114,6 +114,7 @@ public class Connection : IConnection
             }
             return list;
         }
+    }
     public async Task CreateTaskAsync(DTOTodo dtoTodo)
     {
         Todo todo = DTOTodoTransferToTodo(dtoTodo);
