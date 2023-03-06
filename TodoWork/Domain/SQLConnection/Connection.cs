@@ -75,6 +75,25 @@ public class Connection : IConnection
             CompletedDate = todo.Completed
         };          
     }
+    private DTOUser UserMappingDTOUser(User user)
+    {
+        return new DTOUser() { 
+            Id= user.Id,
+            Name= user.Name,
+            Email= user.Email,
+            Password= user.Password,
+        };
+    }
+    private User DTOUserMappingUser(DTOUser user)
+    {
+        return new User() { 
+            Id= user.Id,
+            Name= user.Name,
+            Email= user.Email,
+            Password= user.Password,
+        };
+    }
+    public List<DTOTodo> GetAllTask()
     public async Task CreateTaskAsync(DTOTodo dtoTodo)
     {
         Todo todo = DTOTodoTransferToTodo(dtoTodo);
@@ -198,4 +217,5 @@ public class Connection : IConnection
         }
         finally { _sqlConnection.Close(); }
     }
+
 }
