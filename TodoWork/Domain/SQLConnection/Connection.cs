@@ -94,6 +94,26 @@ public class Connection : IConnection
         };
     }
     public List<DTOTodo> GetAllTask()
+    {
+        SqlCommand cmd = CallSp("GetAllTask");
+        try
+        {
+            _sqlConnection.Open();
+            SqlDataReader myReader = cmd.ExecuteReader();
+            List<DTOTodo> list = new List<DTOTodo>();
+            while (myReader.Read())
+            {
+                list.Add(TodoTransferToDTOTodo(new Todo
+                {
+                    Id = Guid.Parse(myReader.GetString("task_id")),
+                    Title = myReader.GetString("task_title"),
+                    Description = myReader.GetString("task_description"),
+                    TaskPriority = myReader.GetInt32("priorities_id"),
+                    CreatedDate = myReader.GetDateTime("task_created")
+                }));
+            }
+            return list;
+        }
     public async Task CreateTaskAsync(DTOTodo dtoTodo)
     {
         Todo todo = DTOTodoTransferToTodo(dtoTodo);
