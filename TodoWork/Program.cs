@@ -30,5 +30,5 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapRazorPages();
-
+app.UseStatusCodePagesWithRedirects("/Error/SiteDoesntExist");
 app.Run();

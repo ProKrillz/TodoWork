@@ -4,6 +4,16 @@ namespace TodoWork.BLL.TodoServices;
 public interface ITodoServices
 {
     /// <summary>
+    /// Gett all uncompleted task
+    /// </summary>
+    /// <returns></returns>
+    List<DTOTodo> GetAllTask();
+    /// <summary>
+    /// Get all Completed task
+    /// </summary>
+    /// <returns></returns>
+    List<DTOTodo> GetAllCompletedTask();
+    /// <summary>
     /// Create Task with input title and description
     /// </summary>
     /// <param name="todo"></param>
@@ -15,16 +25,6 @@ public interface ITodoServices
     /// <param name="todo"></param>
     /// <returns></returns>
     Task UpdateTaskAsync(DTOTodo todo);
-    /// <summary>
-    /// Gett all uncompleted task
-    /// </summary>
-    /// <returns></returns>
-    List<DTOTodo> GetAllTask();
-    /// <summary>
-    /// Get all Completed task
-    /// </summary>
-    /// <returns></returns>
-    List<DTOTodo> GetAllCompletedTask();
     /// <summary>
     /// Set completed to Datetime.Now
     /// </summary>

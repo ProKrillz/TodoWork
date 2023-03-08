@@ -1,0 +1,29 @@
+﻿@using TodoWork.BLL.DTOModels;
+@model BLL.DTOModels.DTOTodo
+
+<form method="post">
+    <div class="form-control mt-3">
+        <div class="row">
+            <div class="col-10 position-relative">
+                <input asp-for="Id" hidden="hidden" value="@Model.Id" />
+                <h5 class="form-label">@Model.Title</h5>
+                <div class="mb-4">@Model.Description</div>
+                <div class="form-text position-absolute bottom-0">@Html.DisplayNameFor(x => x.Created): @Model.Created </div>
+            </div>
+            <div class="col-sm-2 btn-group-vertical">
+                <a class="btn btn-info" asp-page="/Todo/UpdateTodo" asp-route-id="@Model.Id">Rediger</a>
+                <button class="btn btn-success mt-2" asp-page-handler="Completed">Færdig</button>
+                <a class="btn btn-danger mt-2" data-bs-toggle="modal" href="#DeleteModal" role="button" data-bs-whatever="@Model.Id"> Slet</a>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+
+
+
+
+
+
+
