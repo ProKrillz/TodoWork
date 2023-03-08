@@ -162,25 +162,6 @@ public class Connection : IConnection
             _sqlConnection.Close();
         }
     }
-    public async Task CreateTaskAsync(DTOTodo dtoTodo)
-    {
-        Todo todo = DTOTodoTransferToTodo(dtoTodo);
-        SqlCommand cmd = await CallSpAsync("AddTask");
-        cmd.Parameters.AddWithValue("@TaskId", todo.Id);
-        cmd.Parameters.AddWithValue("@Titel", todo.Title);
-        cmd.Parameters.AddWithValue("@Description", todo.Description);
-        cmd.Parameters.AddWithValue("@Priorities", todo.TaskPriority);
-        cmd.Parameters.AddWithValue("@Created", todo.CreatedDate);
-        try
-        {
-            _sqlConnection.Open();
-            cmd.ExecuteNonQuery();
-        }
-        finally
-        {
-            _sqlConnection.Close();
-        }
-    }
     public async Task UpdateTaskAsync(DTOTodo todox)
     {
         Todo todo = DTOTodoTransferToTodo(todox);
