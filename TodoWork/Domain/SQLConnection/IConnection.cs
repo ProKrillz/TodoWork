@@ -44,4 +44,11 @@ public interface IConnection
     /// <param name="id"></param>
     /// <returns></returns>
     Task UnCompletedTaskAsync(Guid id);
+    Task CreateUserAsync(DTOUser dtoUser);
+    List<DTOUser> GetAllUsers();
+    Task DeleteUserAsync(Guid id);
+    Task UpdateUserAsync(DTOUser dtoUser);
+    Task<DTOUser> UserLoginAsync(string email, string password);
+    Task<DTOUser> GetUserByIdAsync(Guid id);
+    List<DTOTodo> GetTodosByUserId(Guid id);
 }

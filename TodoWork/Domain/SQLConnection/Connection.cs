@@ -213,5 +213,142 @@ public class Connection : IConnection
         }
         finally { _sqlConnection.Close(); }
     }
+    #region User
+    public async Task CreateUserAsync(DTOUser dtoUser)
+    {
+        User user = DTOUserMappingUser(dtoUser);
+        SqlCommand cmd = await CallSpAsync("CreateUser");
+        cmd.Parameters.AddWithValue("@UserId", user.Id);
+        cmd.Parameters.AddWithValue("@Name", user.Name);
+        cmd.Parameters.AddWithValue("@Email", user.Email);
+        cmd.Parameters.AddWithValue("@Password", user.Password);
+        try
+        {
+            _sqlConnection.Open();
+            cmd.ExecuteNonQuery();
+        }
+        finally { _sqlConnection.Close(); }
+    }
+    public async Task UpdateUserAsync(DTOUser dtoUser)
+    {
+        User user = DTOUserMappingUser(dtoUser);
+        SqlCommand cmd = await CallSpAsync("UpdateUser");
+        cmd.Parameters.AddWithValue("@UserId", user.Id);
+        cmd.Parameters.AddWithValue("@Name", user.Name);
+        cmd.Parameters.AddWithValue("@Email", user.Email);
+        cmd.Parameters.AddWithValue("@Password", user.Password);
+        try
+        {
+            _sqlConnection.Open();
+            cmd.ExecuteNonQuery();
+        }
+        finally { _sqlConnection.Close(); }
+    }
+    public List<DTOUser> GetAllUsers()
+    {
+        SqlCommand cmd = CallSp("GetAllUsers");
+        try
+        {
+            _sqlConnection.Open();
+            SqlDataReader reader = cmd.ExecuteReader();
+            List<DTOUser> users = new List<DTOUser>();
+            while (reader.Read())
+            {
+                users.Add(UserMappingDTOUser(new User
+                {
+                    Id = Guid.Parse(reader.GetString("users_id")),
+                    Name = reader.GetString("users_name"),
+                    Email = reader.GetString("users_email"),
+                    Password = reader.GetString("Password")
+                }));
+            }
+            return users;
+        }
+        finally { _sqlConnection.Close(); }
+    }
+    public async Task DeleteUserAsync(Guid id)
+    {
+        SqlCommand cmd = await CallSpAsync("DeleteUser");
+        cmd.Parameters.AddWithValue("@UserId", id);
+        try
+        {
+            _sqlConnection.Open();
+            cmd.ExecuteNonQuery();
+        }
+        finally { _sqlConnection.Close(); }
+    }
+    public async Task<DTOUser> UserLoginAsync(string email, string password)
+    {
+        SqlCommand cmd = await CallSpAsync("UserLogin");
+        cmd.Parameters.AddWithValue("@Email", email);
+        cmd.Parameters.AddWithValue("@Password", password);
+        try
+        {
+            _sqlConnection.Open();
+            SqlDataReader myReader = cmd.ExecuteReader();
+            if (myReader.HasRows)
+            {
+                return UserMappingDTOUser(new User()
+                {
+                    Id = Guid.Parse(myReader.GetString("users_id")),
+                    Name = myReader.GetString("users_name"),
+                    Email = email,
+                    Password = password
+                });
+            }
+            return null;
+        }
+        finally { _sqlConnection.Close(); }
+    }
+    public async Task<DTOUser> GetUserByIdAsync(Guid id)
+    {
+        SqlCommand cmd = await CallSpAsync("GetUserById");
+        cmd.Parameters.AddWithValue("@UserId", id);
+        try
+        {
+            _sqlConnection.Open();
+            SqlDataReader myReader = cmd.ExecuteReader();
+            if (myReader.HasRows)
+            {
+                return UserMappingDTOUser(new User()
+                {
+                    Id = id,
+                    Name = myReader.GetString("users_name"),
+                    Email = myReader.GetString("users_email"),
+                    Password = myReader.GetString("users_password")
+                });
+            }
+        }
+        finally { _sqlConnection.Close(); }
+        return null;
+    }
+    public List<DTOTodo> GetTodosByUserId(Guid id)
+    {
+        SqlCommand cmd = CallSp("GetTodosByUserId");
+        cmd.Parameters.AddWithValue("@UserId", id);
+        try
+        {
+            _sqlConnection.Open();
+            SqlDataReader myReader = cmd.ExecuteReader();
+            List<DTOTodo> list = new();
+            while (myReader.Read())
+            {
+                list.Add(TodoTransferToDTOTodo(new Todo()
+                {
+                    Id = Guid.Parse(myReader.GetString("task_id")),
+                    Title = myReader.GetString("task_title"),
+                    Description = myReader.GetString("task_description"),
+                    TaskPriority = myReader.GetInt32("priorities_id"),
+                    CompletedDate = myReader.GetDateTime("task_completed"),
+                    CreatedDate = myReader.GetDateTime("task_created")
+                }));
+            }
+            return list;
+        }
+        finally { _sqlConnection.Close(); }
+    }
+    #endregion
+
+
 
 }
