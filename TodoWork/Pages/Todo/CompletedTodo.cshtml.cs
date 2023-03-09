@@ -14,18 +14,27 @@ public class CompletedTodoModel : PageModel
     public List<DTOTodo> CompletedTask { get; set; }
     [BindProperty]
     public Guid Id { get; set; }
-    public void OnGet()
+    [BindProperty]
+    public Guid UserId { get; set; }
+    public async Task<IActionResult> OnGetAsync()
     {
-        CompletedTask = _todoServices.GetAllCompletedTask();
+        if (!string.IsNullOrEmpty(HttpContext.Session.GetString("UserEmail")))
+        {
+            DTOUser user =  await _todoServices.GetUserByEmailAsync(HttpContext.Session.GetString("UserEmail"));
+            CompletedTask = await _todoServices.GetAllCompletedTaskByUserIdAsync(user.Id);
+            return Page();
+        }
+        return RedirectToPage("/Error/NotFound");
+
     }
-    public void OnPostUnCompleted()
+    public async Task OnPostUnCompleted()
     {
-        _todoServices.UnCompletedTaskAsync(Id);
-        CompletedTask = _todoServices.GetAllCompletedTask();
+        await _todoServices.UnCompletedTaskAsync(Id);
+        CompletedTask = await _todoServices.GetAllCompletedTaskByUserIdAsync(UserId);
     }
-    public void OnPostDelete()
+    public async Task OnPostDelete()
     { 
-        _todoServices.DeleteCompletedTaskAsync(Id);
-        CompletedTask = _todoServices.GetAllCompletedTask();
+        await _todoServices.DeleteCompletedTaskAsync(Id);
+        CompletedTask = await _todoServices.GetAllCompletedTaskByUserIdAsync(UserId);
     }
 }

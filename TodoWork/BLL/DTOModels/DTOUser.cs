@@ -1,16 +1,18 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using TodoWork.Domain.Entities;
 
 namespace TodoWork.BLL.DTOModels
 {
     public class DTOUser
     {
         public Guid Id { get; set; }
+        [Display(Name = "Navn")]
         public string? Name { get; set; }
-        [EmailAddress]
+        [EmailAddress, Display(Name = "Email")]
         public string? Email { get; set; }
+        [Display(Name = "Adgangskode")]
         public string? Password { get; set; }
-        public List<Todo>? Todos { get; set; }
+        public List<DTOTodo>? Todos { get; set; } = new();
+        public List<DTOTodo> CompletedTodos { get; set; } = new();
     }
 }
 

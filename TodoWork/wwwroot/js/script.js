@@ -4,6 +4,7 @@ exampleModal.addEventListener('show.bs.modal', function (event) {
     var button = event.relatedTarget
     // Extract info from data-bs-* attributes
     var recipient = button.getAttribute('data-bs-whatever')
+    var recipient2 = button.getAttribute('data-bs-user')
     // If necessary, you could initiate an AJAX request here
     // and then do the updating in a callback.
     //
@@ -11,6 +12,8 @@ exampleModal.addEventListener('show.bs.modal', function (event) {
     var modalTitle = exampleModal.querySelector('.modal-title')
     var modalBodyInput = exampleModal.querySelector('.modal-body input')
     var inputVaule = document.getElementById("recipient-name")
+    var inputVaule2 = document.getElementById("user")
     // modalTitle.textContent = 'New message to ' + recipient
     inputVaule.value = recipient
+    inputVaule2.value = recipient2
 })

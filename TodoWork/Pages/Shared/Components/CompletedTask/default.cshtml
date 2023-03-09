@@ -5,7 +5,8 @@
     <div class="form-control mt-3">
         <div class="row">
             <div class="col-10">
-                <input asp-for="Id" hidden="hidden" value="@Model.Id" />
+                <input asp-for="Id" value="@Model.Id" hidden/>
+                <input asp-for="UserId" value="@Model.UserId" hidden/>
                 <h5 class="form-label">@Model.Title</h5>
                 <div class="">@Model.Description</div>
                 <div class="form-text">Brugt tid: @Model.GetUsedTime().Days dage @Model.GetUsedTime().ToString("h't 'm'm 's's'")</div>
@@ -16,7 +17,7 @@
             </div>
             <div class="col-md-2 btn-group-vertical">
                 <button class="btn btn-success btn-h" asp-page-handler="UnCompleted">Genopret</button>
-                <a class="btn btn-danger mt-2 btn-h" data-bs-toggle="modal" href="#DeleteModal" role="button" data-bs-whatever="@Model.Id"> Slet</a>
+                <a class="btn btn-danger mt-2 btn-h" data-bs-toggle="modal" href="#DeleteModal" role="button" data-bs-whatever="@Model.Id" data-bs-user="@Model.UserId"> Slet</a>
             </div>
         </div>
     </div>

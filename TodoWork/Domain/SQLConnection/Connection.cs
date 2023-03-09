@@ -52,6 +52,7 @@ public class Connection : IConnection
     {
         return new DTOTodo() { 
             Id = todo.Id, 
+            UserId = todo.UserId,
             Title = todo.Title, 
             Description = todo.Description, 
             TaskPriority = (Priority)todo.TaskPriority, 
@@ -68,6 +69,7 @@ public class Connection : IConnection
     {
         return new Todo() { 
             Id = todo.Id, 
+            UserId = todo.UserId,
             Title = todo.Title,
             Description = todo.Description,
             TaskPriority = (int)todo.TaskPriority,
@@ -106,6 +108,7 @@ public class Connection : IConnection
                 list.Add(TodoTransferToDTOTodo(new Todo
                 {
                     Id = Guid.Parse(myReader.GetString("task_id")),
+                    UserId = Guid.Parse(myReader.GetString("users_id")),
                     Title = myReader.GetString("task_title"),
                     Description = myReader.GetString("task_description"),
                     TaskPriority = myReader.GetInt32("priorities_id"),
@@ -116,7 +119,7 @@ public class Connection : IConnection
         }
         finally { _sqlConnection.Close(); }
     }
-    public async Task CreateTaskAsync(DTOTodo dtoTodo)
+    public async Task CreateTaskAsync(DTOTodo dtoTodo, Guid userId)
     {
         Todo todo = DTOTodoTransferToTodo(dtoTodo);
         SqlCommand cmd = await CallSpAsync("AddTask");
@@ -125,6 +128,7 @@ public class Connection : IConnection
         cmd.Parameters.AddWithValue("@Description", todo.Description);
         cmd.Parameters.AddWithValue("@Priorities", todo.TaskPriority);
         cmd.Parameters.AddWithValue("@Created", todo.CreatedDate);
+        cmd.Parameters.AddWithValue("@UserId", userId);
         try
         {
             _sqlConnection.Open();
@@ -135,24 +139,73 @@ public class Connection : IConnection
             _sqlConnection.Close();
         }
     }
+    public async Task<DTOTodo> GetTaskByIdAsync(Guid id)
+    {
+        SqlCommand cmd = await CallSpAsync("GetTaskById");
+        cmd.Parameters.AddWithValue("@TaskId", id);
+        try
+        {
+            _sqlConnection.Open();
+            SqlDataReader reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                return TodoTransferToDTOTodo(new Todo() {
+                    Id = Guid.Parse(reader.GetString("task_id")),
+                    UserId = Guid.Parse(reader.GetString("users_id")),
+                    Title = reader.GetString("task_title"),
+                    Description = reader.GetString("task_description"),
+                    TaskPriority = reader.GetInt32("priorities_id"),
+                    CreatedDate = reader.GetDateTime("task_created")
+                });
+            }
+            return null;
+        }
+        finally { _sqlConnection.Close(); } 
+    }
+    public async Task<List<DTOTodo>> GetAllCompletedTaskByUserIdAsync(Guid id)
+    {
+        SqlCommand cmd = await CallSpAsync("GetAllCompletedTaskByUserId");
+        cmd.Parameters.AddWithValue("@UserId", id);
+        try
+        {
+            _sqlConnection.Open();
+            SqlDataReader reader = cmd.ExecuteReader();
+            List<DTOTodo> list = new();   
+            while (reader.Read())
+            {
+                list.Add( TodoTransferToDTOTodo(new Todo()
+                {
+                    Id = Guid.Parse(reader.GetString("task_id")),
+                    UserId = Guid.Parse(reader.GetString("users_id")),
+                    Title = reader.GetString("task_title"),
+                    Description = reader.GetString("task_description"),
+                    TaskPriority = reader.GetInt32("priorities_id"),
+                    CreatedDate = reader.GetDateTime("task_created"),
+                    CompletedDate = reader.GetDateTime("task_completed")
+                }));
+            }
+            return list;
+        }
+        finally { _sqlConnection.Close(); }
+    }
     public List<DTOTodo> GetAllCompletedTask()
     {
         SqlCommand cmd = CallSp("GetAllCompletedTask");
         try
         {
             _sqlConnection.Open();
-            SqlDataReader myReader = cmd.ExecuteReader();
+            SqlDataReader reader = cmd.ExecuteReader();
             List<DTOTodo> list = new List<DTOTodo>();
-            while (myReader.Read())
+            while (reader.Read())
             {
                 list.Add(TodoTransferToDTOTodo(new Todo
                 {
-                    Id = Guid.Parse(myReader.GetString("task_id")),
-                    Title = myReader.GetString("task_title"),
-                    Description = myReader.GetString("task_description"),
-                    TaskPriority = myReader.GetInt32("priorities_id"),
-                    CompletedDate = myReader.GetDateTime("task_completed"),
-                    CreatedDate = myReader.GetDateTime("task_created")
+                    Id = Guid.Parse(reader.GetString("task_id")),
+                    Title = reader.GetString("task_title"),
+                    Description = reader.GetString("task_description"),
+                    TaskPriority = reader.GetInt32("priorities_id"),
+                    CompletedDate = reader.GetDateTime("task_completed"),
+                    CreatedDate = reader.GetDateTime("task_created")
                 }));
             }
             return list;
@@ -286,7 +339,7 @@ public class Connection : IConnection
         {
             _sqlConnection.Open();
             SqlDataReader myReader = cmd.ExecuteReader();
-            if (myReader.HasRows)
+            while(myReader.Read())
             {
                 return UserMappingDTOUser(new User()
                 {
@@ -300,19 +353,19 @@ public class Connection : IConnection
         }
         finally { _sqlConnection.Close(); }
     }
-    public async Task<DTOUser> GetUserByIdAsync(Guid id)
+    public async Task<DTOUser> GetUserByEmailAsync(string email)
     {
-        SqlCommand cmd = await CallSpAsync("GetUserById");
-        cmd.Parameters.AddWithValue("@UserId", id);
+        SqlCommand cmd = await CallSpAsync("GetUserByEmail");
+        cmd.Parameters.AddWithValue("@Email", email);
         try
         {
             _sqlConnection.Open();
             SqlDataReader myReader = cmd.ExecuteReader();
-            if (myReader.HasRows)
+            while(myReader.Read())
             {
                 return UserMappingDTOUser(new User()
                 {
-                    Id = id,
+                    Id = Guid.Parse( myReader.GetString("users_id")),
                     Name = myReader.GetString("users_name"),
                     Email = myReader.GetString("users_email"),
                     Password = myReader.GetString("users_password")
@@ -324,22 +377,22 @@ public class Connection : IConnection
     }
     public List<DTOTodo> GetTodosByUserId(Guid id)
     {
-        SqlCommand cmd = CallSp("GetTodosByUserId");
+        SqlCommand cmd = CallSp("GetAllTaskById");
         cmd.Parameters.AddWithValue("@UserId", id);
         try
         {
             _sqlConnection.Open();
             SqlDataReader myReader = cmd.ExecuteReader();
             List<DTOTodo> list = new();
-            while (myReader.Read())
+            while(myReader.Read())
             {
                 list.Add(TodoTransferToDTOTodo(new Todo()
                 {
                     Id = Guid.Parse(myReader.GetString("task_id")),
+                    UserId = Guid.Parse(myReader.GetString("users_id")),
                     Title = myReader.GetString("task_title"),
                     Description = myReader.GetString("task_description"),
                     TaskPriority = myReader.GetInt32("priorities_id"),
-                    CompletedDate = myReader.GetDateTime("task_completed"),
                     CreatedDate = myReader.GetDateTime("task_created")
                 }));
             }

@@ -1,47 +1,40 @@
 ﻿@page
 @model IndexModel
-@using BLL.DTOModels
 @{
     ViewData["Title"] = "Hjem";
-    string bgColor = "";
 }
-<a class="btn btn-primary" data-bs-toggle="modal" href="#exampleModalToggle" role="button">Opret</a>
+<div class="d-flex justify-content-center mt-5">
+    <form class="form-control w-50" method="post">
+        <h4>Login</h4>
+        <label class="mt-2">Bruger navn</label>
+        <input class="form-control mt-2" asp-for="Email" required />
+        <label class="mt-2">Adgangskode</label>
+        <input class="form-control mt-2" asp-for="Password" type="password" required />
+        <div class="d-flex justify-content-center mt-3 mb-2">
 
-@foreach (var enmum in Enum.GetNames(typeof(DTOTodo.Priority)))
-{
-    @if (enmum == "High") { bgColor = "bg-danger"; }
-    @if (enmum == "Medium") { bgColor = "bg-orange"; }
-    @if (enmum == "Low") { bgColor = "bg-success"; }
-    <details class="mt-3" open>
-        <summary class="@bgColor text-light rounded fs-4 ps-3">@enmum</summary>
-        @foreach (DTOTodo item in Model.Todos.Where(x => x.TaskPriority.ToString() == enmum))
-        {
-            @await Component.InvokeAsync("Task", item)
-        }
-    </details>
-}
-
-@await Component.InvokeAsync("ModalDelete")
+            <button class="btn btn-primary me-2" asp-page-handler="Login">Login</button>
+            <a class="btn btn-primary" data-bs-toggle="modal" href="#exampleModalToggle" role="button">Opret</a>
+        </div>
+    </form>
+</div>
 
 <div class="modal fade" id="exampleModalToggle" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalToggleLabel">Opret opgave</h5>
+                <h5 class="modal-title" id="exampleModalToggleLabel">Opret bruger</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form method="post">
                 <div class="modal-body">
-                    <label class="form-label">@Html.DisplayNameFor(x => x.Todo.Title)</label>
-                    <input class="form-control" asp-for="Todo.Title" required />
-                    <label class="form-label">@Html.DisplayNameFor(x => x.Todo.Description)</label>
-                    <textarea class="form-control" asp-for="Todo.Description" required></textarea>
-                    <label class="form-label me-3">@Html.DisplayNameFor(x => x.Todo.TaskPriority)</label>
-                    <select class="mt-4" asp-for="Todo.TaskPriority">
-                        <option value="High" name="todo.TaskPriority.High">Høj</option>
-                        <option value="Medium" name="todo.TaskPriority.Medium" selected="selected">Mellem</option>
-                        <option value="Low" name="todo.TaskPriority.Low">Lav</option>
-                    </select>
+                    <label class="form-label">@Html.DisplayNameFor(x => x.User.Email)</label>
+                    <input class="form-control" asp-for="CreateEmail" required />
+                    <label class="form-label">@Html.DisplayNameFor(x => x.User.Name)</label>
+                    <input class="form-control" asp-for="Name" required />
+                    <label class="form-label me-3">@Html.DisplayNameFor(x => x.User.Password)</label>
+                    <input class="form-control" asp-for="CreatePassword" type="password" required />
+                    <label class="form-label me-3">Gentag @Html.DisplayNameFor(x => x.User.Password)</label>
+                    <input class="form-control" asp-for="CreatePassword2" type="password" required />
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-primary mt-3" asp-page-handler="Create">Opret</button>

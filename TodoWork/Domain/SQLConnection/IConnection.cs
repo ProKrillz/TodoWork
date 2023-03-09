@@ -10,6 +10,18 @@ public interface IConnection
     /// <returns></returns>
     List<DTOTodo> GetAllTask();
     /// <summary>
+    /// Get task by id from db Task Table
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    Task<DTOTodo> GetTaskByIdAsync(Guid id);
+    /// <summary>
+    /// Get all completed task from user in task table
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    Task<List<DTOTodo>> GetAllCompletedTaskByUserIdAsync(Guid id);
+    /// <summary>
     /// Load all completed todo from db Task Table
     /// </summary>
     /// <returns></returns>
@@ -19,7 +31,7 @@ public interface IConnection
     /// </summary>
     /// <param name="todo"></param>
     /// <returns></returns>
-    Task CreateTaskAsync(DTOTodo todo);
+    Task CreateTaskAsync(DTOTodo todo, Guid userId);
     /// <summary>
     /// Create a copy of DTO to Todo object and update ti db Task Table (by guid)
     /// </summary>
@@ -49,6 +61,6 @@ public interface IConnection
     Task DeleteUserAsync(Guid id);
     Task UpdateUserAsync(DTOUser dtoUser);
     Task<DTOUser> UserLoginAsync(string email, string password);
-    Task<DTOUser> GetUserByIdAsync(Guid id);
+    Task<DTOUser> GetUserByEmailAsync(string email);
     List<DTOTodo> GetTodosByUserId(Guid id);
 }

@@ -12,15 +12,18 @@ public class UpdateTodoModel : PageModel
         _todoServices= service;
     }
     [BindProperty(SupportsGet = true)]
-    public Guid id { get; set; }
+    public Guid Id { get; set; }
     [BindProperty]
     public DTOTodo Todo { get; set; }
-    public IActionResult OnGet()
+    [BindProperty]
+    public DTOUser User { get; set; }
+    public async Task<IActionResult> OnGetAsync()
     {
-        Todo = _todoServices.GetAllTask().Find(x => x.Id == id);
-        if (Todo != null)
+        if (!string.IsNullOrEmpty(HttpContext.Session.GetString("UserEmail")))
+        {
+            Todo = await _todoServices.GetTaskByIdAsync(Id);
             return Page();
-
+        }
         return RedirectToPage("/Error/NotFound");
     }
     public IActionResult OnPost()
@@ -28,7 +31,7 @@ public class UpdateTodoModel : PageModel
         if (ModelState.IsValid)
         {
             _todoServices.UpdateTaskAsync(Todo);
-            return RedirectToPage("/Index");
+            return RedirectToPage("/User/UserIndex");
         }
         return Page();
     }

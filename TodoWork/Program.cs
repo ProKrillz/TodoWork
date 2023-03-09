@@ -9,7 +9,9 @@ builder.Services.AddRazorPages();
 var connectionString = Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddRazorPages().Services.AddSingleton<IConnection>(new Connection(connectionString))
-.AddRazorPages().Services.AddSingleton<ITodoServices, TodoServices>();
+.AddRazorPages().Services.AddSingleton<ITodoServices, TodoServices>()
+.AddSession(option => { option.IdleTimeout = TimeSpan.FromMinutes(30); })
+.AddMemoryCache();
 
 
 var app = builder.Build();
@@ -28,7 +30,7 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
-
+app.UseSession();
 app.MapRazorPages();
 app.UseStatusCodePagesWithRedirects("/Error/SiteDoesntExist");
 app.Run();

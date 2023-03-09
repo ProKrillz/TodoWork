@@ -1,55 +1,61 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.ComponentModel.DataAnnotations;
 using TodoWork.BLL.DTOModels;
 using TodoWork.BLL.TodoServices;
+using TodoWork.SessionHelper;
 
 namespace TodoWork.Pages;
 
 public class IndexModel : PageModel
 {
-    private readonly ILogger<IndexModel> _logger;
-
     private readonly ITodoServices _todoServices;
-    public IndexModel(ILogger<IndexModel> logger, ITodoServices iTodoServices)
+
+    public IndexModel(ITodoServices todoServices)
     {
-        _logger = logger;
-        _todoServices = iTodoServices;
+        _todoServices = todoServices;
     }
-    public List<DTOTodo> Todos { get; set; }
-
+    [BindProperty, EmailAddress]
+    public string Email { get; set; }
     [BindProperty]
-    public Guid Id { get; set; }
-
+    public string Password { get; set; }
+    [BindProperty, EmailAddress, MaxLength(50), Required]
+    public string CreateEmail { get; set; }
+    [BindProperty, MaxLength(50), Required]
+    public string Name { get; set; }
     [BindProperty]
-    public DTOTodo Todo { get; set; }
-
-    public void OnGet()
+    public string CreatePassword { get; set; }
+    [BindProperty, Compare(nameof(CreatePassword)), Required]
+    public string CreatePassword2 { get; set; }
+    public DTOUser User { get; set; }
+    public IActionResult OnGet()
     {
-        Todos = _todoServices.GetAllTask();
+        if (!string.IsNullOrEmpty(HttpContext.Session.GetString("UserEmail")))
+        {
+            return RedirectToPage("/User/UserIndex");
+        }
+        return Page();
+    }
+    public async Task<IActionResult> OnPostLogin()
+    {
+        User = await _todoServices.UserLoginAsync(Email, Password);
+        if (User != null)
+        {
+            HttpContext.Session.SetSessionString(User.Email, "UserEmail");
+            return RedirectToPage("/User/UserIndex");
+        }
+        return Page();
     }
     public void OnPostCreate()
     {
-        if (ModelState.IsValid)
+        User = new DTOUser()
         {
-            _todoServices.CreateTaskAsync(new DTOTodo()
-            {
-                Id = Guid.NewGuid(),
-                Title = Todo.Title,
-                Description = Todo.Description,
-                TaskPriority = Todo.TaskPriority,
-                Created = DateTime.Now,
-            });
-            Todos = _todoServices.GetAllTask();
-        }
+            Id = Guid.NewGuid(),
+            Name = Name,
+            Email = CreateEmail,
+            Password = CreatePassword2,
+        };
+        _todoServices.CreateUserAsync(User);
     }
-    public void OnPostDelete()
-    {
-        _todoServices.DeleteTaskAsync(Id);
-        Todos = _todoServices.GetAllTask();
-    }
-    public void OnPostCompleted()
-    {
-        _todoServices.CompletTaskAsync(Id);
-        Todos = _todoServices.GetAllTask();
-    }
+
 }

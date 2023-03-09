@@ -4,6 +4,7 @@ namespace TodoWork.BLL.DTOModels;
 public class DTOTodo
 {
     public Guid Id { get; set; }
+    public Guid UserId { get; set; }
     [Display(Name = "Titel"), MaxLength(30), Required]
     public string? Title { get; set; }
     [Display(Name = "Beskrivelse"), MaxLength(250), Required]

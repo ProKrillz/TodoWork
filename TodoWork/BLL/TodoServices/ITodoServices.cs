@@ -4,21 +4,23 @@ namespace TodoWork.BLL.TodoServices;
 public interface ITodoServices
 {
     /// <summary>
-    /// Gett all uncompleted task
-    /// </summary>
-    /// <returns></returns>
-    List<DTOTodo> GetAllTask();
-    /// <summary>
-    /// Get all Completed task
-    /// </summary>
-    /// <returns></returns>
-    List<DTOTodo> GetAllCompletedTask();
-    /// <summary>
     /// Create Task with input title and description
     /// </summary>
     /// <param name="todo"></param>
     /// <returns></returns>
-    Task CreateTaskAsync(DTOTodo todo);
+    Task CreateTaskAsync(DTOTodo todo, Guid userId);
+    /// <summary>
+    /// Get Task by id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    Task<DTOTodo> GetTaskByIdAsync(Guid id);
+    /// <summary>
+    /// Get all completed task from user
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    Task<List<DTOTodo>> GetAllCompletedTaskByUserIdAsync(Guid id);
     /// <summary>
     /// Update Task input Title, Description and Priority
     /// </summary>
@@ -49,4 +51,11 @@ public interface ITodoServices
     /// <param name="id"></param>
     /// <returns></returns>
     Task DeleteCompletedTaskAsync(Guid id);
+    Task CreateUserAsync(DTOUser dtoUser);
+    List<DTOUser> GetAllUsers();
+    Task DeleteUserAsync(Guid id);
+    Task UpdateUserAsync(DTOUser dtoUser);
+    Task<DTOUser> UserLoginAsync(string email, string password);
+    Task<DTOUser> GetUserByEmailAsync(string email);
+    List<DTOTodo> GetTodosByUserId(Guid id);
 }

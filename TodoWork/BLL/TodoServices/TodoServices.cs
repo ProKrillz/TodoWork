@@ -6,73 +6,66 @@ namespace TodoWork.BLL.TodoServices;
 public class TodoServices : ITodoServices
 {
     private readonly IConnection _connection;
-    public List<DTOTodo> Todos { get; set; }
     public List<DTOTodo> CompletedTodos { get; set; }
     public TodoServices(IConnection connection)
     {
         _connection = connection;
-        Todos = _connection.GetAllTask();
-        CompletedTodos = _connection.GetAllCompletedTask();
     }
-    public List<DTOTodo> GetAllTask() => Todos;
-    public List<DTOTodo> GetAllCompletedTask() => CompletedTodos;
-    public async Task CreateTaskAsync(DTOTodo todo)
-    {
-        Task task = Task.Run(() => _connection.CreateTaskAsync(todo));
-        Todos.Add(todo);
-        await task;
-    }
-    public async Task UpdateTaskAsync(DTOTodo todo)
-    {
-        DTOTodo? foundTodo = Todos.Where(x => x.Id == todo.Id).FirstOrDefault();
-        if (foundTodo != null)
-        {
-            Task task = Task.Run(() => _connection.UpdateTaskAsync(todo));
-            foundTodo.Title = todo.Title;
-            foundTodo.Description = todo.Description;
-            foundTodo.TaskPriority = todo.TaskPriority;
-            await task;
-        }
-    }
-    public async Task CompletTaskAsync(Guid id)
-    {
-        DTOTodo? foundTodo = Todos.Where(x => x.Id == id).FirstOrDefault();
-        if (foundTodo != null)
-        {
-            Task task = Task.Run(() => _connection.CompletTaskAsync(id));
-            foundTodo.Completed = DateTime.Now;
-            CompletedTodos.Add(foundTodo);
-            Todos.RemoveAll(x => x.Id == id);
-            await task;
-        }
-    }
-    public async Task UnCompletedTaskAsync(Guid id)
-    {
-        DTOTodo? foundTodo = CompletedTodos.Where(x => x.Id == id).FirstOrDefault();
-        if (foundTodo != null)
-        {
-            Task task = Task.Run(() => _connection.UnCompletedTaskAsync(id));
-            foundTodo.Completed = null;
-            Todos.Add(foundTodo);
-            CompletedTodos.Remove(foundTodo);
-            await task;
-        }
-    }
-    public async Task DeleteTaskAsync(Guid id)
-    {
-        Task task = Task.Run(() => _connection.DeleteTaskAsync(id));
-        DTOTodo? foundDto = Todos.SingleOrDefault(x => x.Id == id);
-        if (foundDto != null)
-            Todos.Remove(foundDto);
-        await task;
-    }
-    public async Task DeleteCompletedTaskAsync(Guid id)
-    {
-        Task task = Task.Run(() => _connection.DeleteTaskAsync(id));
-        DTOTodo? foundDto = CompletedTodos.SingleOrDefault(x => x.Id == id); 
-        if (foundDto != null)
-            CompletedTodos.Remove(foundDto);         
-        await task;
-    }
+    #region Task
+    public async Task CreateTaskAsync(DTOTodo todo, Guid userId) =>
+    await _connection.CreateTaskAsync(todo, userId);
+
+    public async Task<DTOTodo> GetTaskByIdAsync(Guid id) =>
+         await _connection.GetTaskByIdAsync(id);
+
+    public async Task<List<DTOTodo>> GetAllCompletedTaskByUserIdAsync(Guid id) =>
+         await _connection.GetAllCompletedTaskByUserIdAsync(id);
+
+    public async Task UpdateTaskAsync(DTOTodo todo) =>
+        await _connection.UpdateTaskAsync(todo);
+
+    public async Task CompletTaskAsync(Guid id) =>
+        await _connection.CompletTaskAsync(id);
+
+    public async Task UnCompletedTaskAsync(Guid id) =>
+        await _connection.UnCompletedTaskAsync(id);
+
+    public async Task DeleteTaskAsync(Guid id) =>
+        await _connection.DeleteTaskAsync(id);
+
+    public async Task DeleteCompletedTaskAsync(Guid id) =>
+        await _connection.DeleteTaskAsync(id);
+    #endregion
+
+    #region User
+    public async Task CreateUserAsync(DTOUser user) =>
+        await _connection.CreateUserAsync(user);
     
+    public async Task UpdateUserAsync(DTOUser user)
+    { 
+        await _connection.UpdateUserAsync(user);
+    }
+    public List<DTOUser> GetAllUsers()
+    {
+        return _connection.GetAllUsers();
+    }
+    public async Task DeleteUserAsync(Guid id)
+    {
+        await _connection.DeleteUserAsync(id);
+    }
+    public async Task<DTOUser> UserLoginAsync(string email, string password)
+    {
+        return await _connection.UserLoginAsync(email, password);
+    }
+    public async Task<DTOUser> GetUserByEmailAsync(string email)
+    {
+        return await _connection.GetUserByEmailAsync(email);
+    }
+    public List<DTOTodo> GetTodosByUserId(Guid id)
+    {
+        return _connection.GetTodosByUserId(id);
+    }
+
+
+    #endregion
 }
