@@ -352,7 +352,4 @@ public class Connection : IConnection
         finally { _sqlConnection.Close(); }
     }
     #endregion
-
-
-
 }
