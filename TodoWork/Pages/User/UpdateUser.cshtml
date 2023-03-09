@@ -1,0 +1,40 @@
+﻿@page
+@model TodoWork.Pages.User.UpdateUserModel
+@{
+}
+<div class="d-flex justify-content-center mt-5">
+    <form class="form-control w-50" method="post">
+        <h4>Rediger Bruger</h4>
+        <input asp-for="EditUser.Id" hidden="hidden" />
+        <label class="form-label">@Html.DisplayNameFor(x => x.EditUser.Name)</label>
+        <input class="form-control" asp-for="EditUser.Name" required />
+        <label class="form-label">@Html.DisplayNameFor(x => x.EditUser.Email)</label>
+        <input class="form-control" asp-for="EditUser.Email" required />
+        <label class="form-label">@Html.DisplayNameFor(x => x.EditUser.Password)</label>
+        <input class="form-control" asp-for="EditUser.Password" value="@Model.EditUser.Password" type="password" required />
+        <div class="d-flex justify-content-center mb-2 mt-2">
+            <button class="btn btn-primary me-2" asp-page-handler="Update">Opdater</button>
+            <a class="btn btn-primary ms-2" data-bs-toggle="modal" href="#DeleteModal" role="button" data-bs-user="@Model.EditUser.Id">Slet bruger</a>
+        </div>
+    </form>
+</div>
+
+<div class="modal fade" id="DeleteModal" aria-hidden="true" aria-labelledby="exampleModalToggleLabel" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalToggleLabel">Slet opgave</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post">
+                <div class="modal-body">
+                    <div>Vil du slette din bruger?</div>
+                    <input id="user" asp-for="EditUser.Id" hidden />
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-success" asp-page-handler="Delete">Ja</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

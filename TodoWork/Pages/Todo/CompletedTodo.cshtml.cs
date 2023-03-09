@@ -25,7 +25,6 @@ public class CompletedTodoModel : PageModel
             return Page();
         }
         return RedirectToPage("/Error/NotFound");
-
     }
     public async Task OnPostUnCompleted()
     {

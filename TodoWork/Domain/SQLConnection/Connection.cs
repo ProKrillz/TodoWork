@@ -15,6 +15,7 @@ public class Connection : IConnection
         _connectionString = connectionString;
         _sqlConnection = new SqlConnection(_connectionString);
     }
+    #region ---------------------------------------------- Sp ----------------------------------------------
     /// <summary>
     /// Create Stored Procedure Async
     /// </summary>
@@ -43,85 +44,81 @@ public class Connection : IConnection
         };
         return spCommand;
     }
+    #endregion
+
+    #region  ------------------------------------------- Mapping  -------------------------------------------
     /// <summary>
-    /// Transfer object
+    /// Mappping object
     /// </summary>
     /// <param name="todo"></param>
     /// <returns></returns>
-    private DTOTodo TodoTransferToDTOTodo(Todo todo)
+    private DTOTodo TodoMappingToDTOTodo(Todo todo)
     {
-        return new DTOTodo() { 
-            Id = todo.Id, 
+        return new DTOTodo()
+        {
+            Id = todo.Id,
             UserId = todo.UserId,
-            Title = todo.Title, 
-            Description = todo.Description, 
-            TaskPriority = (Priority)todo.TaskPriority, 
-            Created = todo.CreatedDate, 
-            Completed = todo.CompletedDate  
-        };      
+            Title = todo.Title,
+            Description = todo.Description,
+            TaskPriority = (Priority)todo.TaskPriority,
+            Created = todo.CreatedDate,
+            Completed = todo.CompletedDate
+        };
     }
     /// <summary>
-    /// Transfer object
+    /// Mapping object
     /// </summary>
     /// <param name="todo"></param>
     /// <returns></returns>
-    private Todo DTOTodoTransferToTodo(DTOTodo todo)
+    private Todo DTOTodoMappingToTodo(DTOTodo todo)
     {
-        return new Todo() { 
-            Id = todo.Id, 
+        return new Todo()
+        {
+            Id = todo.Id,
             UserId = todo.UserId,
             Title = todo.Title,
             Description = todo.Description,
             TaskPriority = (int)todo.TaskPriority,
             CreatedDate = todo.Created,
             CompletedDate = todo.Completed
-        };          
+        };
     }
+    /// <summary>
+    /// Mapping object
+    /// </summary>
+    /// <param name="user"></param>
+    /// <returns></returns>
     private DTOUser UserMappingDTOUser(User user)
     {
-        return new DTOUser() { 
-            Id= user.Id,
-            Name= user.Name,
-            Email= user.Email,
-            Password= user.Password,
+        return new DTOUser()
+        {
+            Id = user.Id,
+            Name = user.Name,
+            Email = user.Email,
+            Password = user.Password
         };
     }
+    /// <summary>
+    /// Mapping object
+    /// </summary>
+    /// <param name="user"></param>
+    /// <returns></returns>
     private User DTOUserMappingUser(DTOUser user)
     {
-        return new User() { 
-            Id= user.Id,
-            Name= user.Name,
-            Email= user.Email,
-            Password= user.Password,
+        return new User()
+        {
+            Id = user.Id,
+            Name = user.Name,
+            Email = user.Email,
+            Password = user.Password
         };
     }
-    public List<DTOTodo> GetAllTask()
-    {
-        SqlCommand cmd = CallSp("GetAllTask");
-        try
-        {
-            _sqlConnection.Open();
-            SqlDataReader myReader = cmd.ExecuteReader();
-            List<DTOTodo> list = new List<DTOTodo>();
-            while (myReader.Read())
-            {
-                list.Add(TodoTransferToDTOTodo(new Todo
-                {
-                    Id = Guid.Parse(myReader.GetString("task_id")),
-                    UserId = Guid.Parse(myReader.GetString("users_id")),
-                    Title = myReader.GetString("task_title"),
-                    Description = myReader.GetString("task_description"),
-                    TaskPriority = myReader.GetInt32("priorities_id"),
-                    CreatedDate = myReader.GetDateTime("task_created")
-                }));
-            }
-            return list;
-        }
-        finally { _sqlConnection.Close(); }
-    }
+    #endregion
+
+    #region --------------------------------------------- Task ---------------------------------------------
     public async Task CreateTaskAsync(DTOTodo dtoTodo, Guid userId)
     {
-        Todo todo = DTOTodoTransferToTodo(dtoTodo);
+        Todo todo = DTOTodoMappingToTodo(dtoTodo);
         SqlCommand cmd = await CallSpAsync("AddTask");
         cmd.Parameters.AddWithValue("@TaskId", todo.Id);
         cmd.Parameters.AddWithValue("@Titel", todo.Title);
@@ -149,7 +146,8 @@ public class Connection : IConnection
             SqlDataReader reader = cmd.ExecuteReader();
             while (reader.Read())
             {
-                return TodoTransferToDTOTodo(new Todo() {
+                return TodoMappingToDTOTodo(new Todo()
+                {
                     Id = Guid.Parse(reader.GetString("task_id")),
                     UserId = Guid.Parse(reader.GetString("users_id")),
                     Title = reader.GetString("task_title"),
@@ -160,7 +158,7 @@ public class Connection : IConnection
             }
             return null;
         }
-        finally { _sqlConnection.Close(); } 
+        finally { _sqlConnection.Close(); }
     }
     public async Task<List<DTOTodo>> GetAllCompletedTaskByUserIdAsync(Guid id)
     {
@@ -170,10 +168,10 @@ public class Connection : IConnection
         {
             _sqlConnection.Open();
             SqlDataReader reader = cmd.ExecuteReader();
-            List<DTOTodo> list = new();   
+            List<DTOTodo> list = new();
             while (reader.Read())
             {
-                list.Add( TodoTransferToDTOTodo(new Todo()
+                list.Add(TodoMappingToDTOTodo(new Todo()
                 {
                     Id = Guid.Parse(reader.GetString("task_id")),
                     UserId = Guid.Parse(reader.GetString("users_id")),
@@ -188,36 +186,9 @@ public class Connection : IConnection
         }
         finally { _sqlConnection.Close(); }
     }
-    public List<DTOTodo> GetAllCompletedTask()
-    {
-        SqlCommand cmd = CallSp("GetAllCompletedTask");
-        try
-        {
-            _sqlConnection.Open();
-            SqlDataReader reader = cmd.ExecuteReader();
-            List<DTOTodo> list = new List<DTOTodo>();
-            while (reader.Read())
-            {
-                list.Add(TodoTransferToDTOTodo(new Todo
-                {
-                    Id = Guid.Parse(reader.GetString("task_id")),
-                    Title = reader.GetString("task_title"),
-                    Description = reader.GetString("task_description"),
-                    TaskPriority = reader.GetInt32("priorities_id"),
-                    CompletedDate = reader.GetDateTime("task_completed"),
-                    CreatedDate = reader.GetDateTime("task_created")
-                }));
-            }
-            return list;
-        }
-        finally
-        {
-            _sqlConnection.Close();
-        }
-    }
     public async Task UpdateTaskAsync(DTOTodo todox)
     {
-        Todo todo = DTOTodoTransferToTodo(todox);
+        Todo todo = DTOTodoMappingToTodo(todox);
         SqlCommand cmd = await CallSpAsync("UpdateTask");
         cmd.Parameters.AddWithValue("@TaskId", todo.Id);
         cmd.Parameters.AddWithValue("@Titel", todo.Title);
@@ -266,7 +237,9 @@ public class Connection : IConnection
         }
         finally { _sqlConnection.Close(); }
     }
-    #region User
+    #endregion
+
+    #region --------------------------------------------- User --------------------------------------------- 
     public async Task CreateUserAsync(DTOUser dtoUser)
     {
         User user = DTOUserMappingUser(dtoUser);
@@ -297,28 +270,6 @@ public class Connection : IConnection
         }
         finally { _sqlConnection.Close(); }
     }
-    public List<DTOUser> GetAllUsers()
-    {
-        SqlCommand cmd = CallSp("GetAllUsers");
-        try
-        {
-            _sqlConnection.Open();
-            SqlDataReader reader = cmd.ExecuteReader();
-            List<DTOUser> users = new List<DTOUser>();
-            while (reader.Read())
-            {
-                users.Add(UserMappingDTOUser(new User
-                {
-                    Id = Guid.Parse(reader.GetString("users_id")),
-                    Name = reader.GetString("users_name"),
-                    Email = reader.GetString("users_email"),
-                    Password = reader.GetString("Password")
-                }));
-            }
-            return users;
-        }
-        finally { _sqlConnection.Close(); }
-    }
     public async Task DeleteUserAsync(Guid id)
     {
         SqlCommand cmd = await CallSpAsync("DeleteUser");
@@ -339,7 +290,7 @@ public class Connection : IConnection
         {
             _sqlConnection.Open();
             SqlDataReader myReader = cmd.ExecuteReader();
-            while(myReader.Read())
+            while (myReader.Read())
             {
                 return UserMappingDTOUser(new User()
                 {
@@ -361,11 +312,11 @@ public class Connection : IConnection
         {
             _sqlConnection.Open();
             SqlDataReader myReader = cmd.ExecuteReader();
-            while(myReader.Read())
+            while (myReader.Read())
             {
                 return UserMappingDTOUser(new User()
                 {
-                    Id = Guid.Parse( myReader.GetString("users_id")),
+                    Id = Guid.Parse(myReader.GetString("users_id")),
                     Name = myReader.GetString("users_name"),
                     Email = myReader.GetString("users_email"),
                     Password = myReader.GetString("users_password")
@@ -384,9 +335,9 @@ public class Connection : IConnection
             _sqlConnection.Open();
             SqlDataReader myReader = cmd.ExecuteReader();
             List<DTOTodo> list = new();
-            while(myReader.Read())
+            while (myReader.Read())
             {
-                list.Add(TodoTransferToDTOTodo(new Todo()
+                list.Add(TodoMappingToDTOTodo(new Todo()
                 {
                     Id = Guid.Parse(myReader.GetString("task_id")),
                     UserId = Guid.Parse(myReader.GetString("users_id")),

@@ -23,9 +23,9 @@ public class IndexModel : PageModel
     public string CreateEmail { get; set; }
     [BindProperty, MaxLength(50), Required]
     public string Name { get; set; }
-    [BindProperty]
+    [BindProperty, MaxLength(100)]
     public string CreatePassword { get; set; }
-    [BindProperty, Compare(nameof(CreatePassword)), Required]
+    [BindProperty, MaxLength(100), Compare(nameof(CreatePassword), ErrorMessage = "Begge password skal være ens")]
     public string CreatePassword2 { get; set; }
     public DTOUser User { get; set; }
     public IActionResult OnGet()
@@ -48,14 +48,17 @@ public class IndexModel : PageModel
     }
     public void OnPostCreate()
     {
-        User = new DTOUser()
+        if (CreatePassword == CreatePassword2)
         {
-            Id = Guid.NewGuid(),
-            Name = Name,
-            Email = CreateEmail,
-            Password = CreatePassword2,
-        };
-        _todoServices.CreateUserAsync(User);
+            User = new DTOUser()
+            {
+                Id = Guid.NewGuid(),
+                Name = Name,
+                Email = CreateEmail,
+                Password = CreatePassword2,
+            };
+            _todoServices.CreateUserAsync(User);
+        }
     }
 
 }

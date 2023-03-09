@@ -12,7 +12,6 @@ namespace TodoWork.BLL.DTOModels
         [Display(Name = "Adgangskode")]
         public string? Password { get; set; }
         public List<DTOTodo>? Todos { get; set; } = new();
-        public List<DTOTodo> CompletedTodos { get; set; } = new();
     }
 }
 

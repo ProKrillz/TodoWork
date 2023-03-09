@@ -5,11 +5,6 @@ namespace TodoWork.Domain.SQLConnection;
 public interface IConnection
 {
     /// <summary>
-    /// Load all uncompleted todo from db Task Table
-    /// </summary>
-    /// <returns></returns>
-    List<DTOTodo> GetAllTask();
-    /// <summary>
     /// Get task by id from db Task Table
     /// </summary>
     /// <param name="id"></param>
@@ -21,11 +16,6 @@ public interface IConnection
     /// <param name="id"></param>
     /// <returns></returns>
     Task<List<DTOTodo>> GetAllCompletedTaskByUserIdAsync(Guid id);
-    /// <summary>
-    /// Load all completed todo from db Task Table
-    /// </summary>
-    /// <returns></returns>
-    List<DTOTodo> GetAllCompletedTask();
     /// <summary>
     /// Create a copy of DTO to Todo object and write to db Task table 
     /// </summary>
@@ -56,11 +46,41 @@ public interface IConnection
     /// <param name="id"></param>
     /// <returns></returns>
     Task UnCompletedTaskAsync(Guid id);
+    /// <summary>
+    /// Set data in db User table
+    /// </summary>
+    /// <param name="dtoUser"></param>
+    /// <returns></returns>
     Task CreateUserAsync(DTOUser dtoUser);
-    List<DTOUser> GetAllUsers();
+    /// <summary>
+    /// Delete User from db
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     Task DeleteUserAsync(Guid id);
+    /// <summary>
+    /// Update user for db User table
+    /// </summary>
+    /// <param name="dtoUser"></param>
+    /// <returns></returns>
     Task UpdateUserAsync(DTOUser dtoUser);
+    /// <summary>
+    /// Load data from db User table
+    /// </summary>
+    /// <param name="email"></param>
+    /// <param name="password"></param>
+    /// <returns></returns>
     Task<DTOUser> UserLoginAsync(string email, string password);
+    /// <summary>
+    /// Load data from db User Table
+    /// </summary>
+    /// <param name="email"></param>
+    /// <returns></returns>
     Task<DTOUser> GetUserByEmailAsync(string email);
+    /// <summary>
+    /// Load data from db Task table
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     List<DTOTodo> GetTodosByUserId(Guid id);
 }

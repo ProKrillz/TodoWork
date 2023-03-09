@@ -2,7 +2,7 @@
 
 ## Description
 
-Todo work is a website where you can create tasks with title, description and priorities. You can complet task and se how much time used on taskes and uncomplet task.
+Todo work is a website where you can create tasks with title, description and priorities. You can complet task and se how much time used on taskes and uncomplet task. You have to be a user on the website to use its features.
 
 Technologies: 
 * <a href="https://learn.microsoft.com/en-us/dotnet/csharp/" target="_blank">C#</a>
@@ -13,7 +13,7 @@ Technologies:
 
 Made by Thomas Damkjær
 
-Last updated: 22-02-2023
+Last updated: 09-03-2023
 
 ## Requirements
 
@@ -22,7 +22,9 @@ Last updated: 22-02-2023
 * <a href="https://www.microsoft.com/en-us/sql-server/sql-server-downloads" target="_blank">Microsoft SQL</a>
 
 ## Tags
-* <a href="https://github.com/ProKrillz/TodoWork/releases/tag/v1">[v1.0] - Current version</a>
+* <a href="https://github.com/ProKrillz/TodoWork/releases/tag/v1">[v2.0] - Current version</a>
+* <a href="https://github.com/ProKrillz/TodoWork/releases/tag/v1">[v1.1] - Views</a>
+* <a href="https://github.com/ProKrillz/TodoWork/releases/tag/v1">[v1.0] - Version 1</a>
 * <a href="https://github.com/ProKrillz/TodoWork/releases/tag/v0.3">[v0.3] - Async</a>
 * <a href="https://github.com/ProKrillz/TodoWork/releases/tag/v0.2">[v0.2] - Crud</a>
 * <a href="https://github.com/ProKrillz/TodoWork/releases/tag/v0.1">[v0.1] - Structure</a>
@@ -30,9 +32,9 @@ Last updated: 22-02-2023
 
 ## Upcoming features
 
-* Users
+* more user message when an error is showen
 
 ## Known issues
 
-* no animations
-* no error page
+* no error message when create a user and both passwords is no equal
+*  no error message when create a task with whitespaces 

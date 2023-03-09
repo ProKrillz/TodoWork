@@ -32,9 +32,9 @@
                     <label class="form-label">@Html.DisplayNameFor(x => x.User.Name)</label>
                     <input class="form-control" asp-for="Name" required />
                     <label class="form-label me-3">@Html.DisplayNameFor(x => x.User.Password)</label>
-                    <input class="form-control" asp-for="CreatePassword" type="password" required />
+                    <input class="form-control" asp-for="CreatePassword" type="password" required />            
                     <label class="form-label me-3">Gentag @Html.DisplayNameFor(x => x.User.Password)</label>
-                    <input class="form-control" asp-for="CreatePassword2" type="password" required />
+                    <input class="form-control" asp-for="CreatePassword2" type="password" required />            
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-primary mt-3" asp-page-handler="Create">Opret</button>
