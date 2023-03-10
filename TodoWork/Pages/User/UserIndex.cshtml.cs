@@ -27,9 +27,9 @@ public class UserIndexModel : PageModel
             User.Todos = _todoServices.GetTodosByUserId(User.Id);
         }
     }
-    public void OnPostCreate()
+    public async Task OnPostCreate()
     {
-        _todoServices.CreateTaskAsync(new DTOTodo()
+        await _todoServices.CreateTaskAsync(new DTOTodo()
         {
             Id = Guid.NewGuid(),
             Title = Todo.Title,
@@ -37,17 +37,20 @@ public class UserIndexModel : PageModel
             TaskPriority = Todo.TaskPriority,
             Created = DateTime.Now,
         }, UserId);
+        User = await _todoServices.GetUserByEmailAsync(HttpContext.Session.GetString("UserEmail"));
         User.Todos = _todoServices.GetTodosByUserId(UserId);
 
     }
-    public void OnPostDelete()
+    public async Task OnPostDelete()
     {
-        _todoServices.DeleteTaskAsync(Id);
+        await _todoServices.DeleteTaskAsync(Id);
+        User = await _todoServices.GetUserByEmailAsync(HttpContext.Session.GetString("UserEmail"));
         User.Todos = _todoServices.GetTodosByUserId(UserId);
     }
-    public void OnPostCompleted()
+    public async Task OnPostCompleted()
     {
-        _todoServices.CompletTaskAsync(Id);
+        await _todoServices.CompletTaskAsync(Id);
+        User = await _todoServices.GetUserByEmailAsync(HttpContext.Session.GetString("UserEmail"));
         User.Todos = _todoServices.GetTodosByUserId(UserId);
     }
     public IActionResult OnPostLogOut()

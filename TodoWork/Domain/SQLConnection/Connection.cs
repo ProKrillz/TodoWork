@@ -46,7 +46,7 @@ public class Connection : IConnection
     }
     #endregion
 
-    #region  ------------------------------------------- Mapping  -------------------------------------------
+    #region  ------------------------------------------- Mapping -------------------------------------------
     /// <summary>
     /// Mappping object
     /// </summary>

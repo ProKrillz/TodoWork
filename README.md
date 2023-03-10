@@ -21,9 +21,15 @@ Last updated: 09-03-2023
 
 * <a href="https://www.microsoft.com/en-us/sql-server/sql-server-downloads" target="_blank">Microsoft SQL</a>
 
+## Set up
+
+Database
+
+Run script TodoCreate.sql and TodoStoredProcedure.sql in microsoft sql server management.
+
 ## Tags
-* <a href="https://github.com/ProKrillz/TodoWork/releases/tag/v1">[v2.0] - Current version</a>
-* <a href="https://github.com/ProKrillz/TodoWork/releases/tag/v1">[v1.1] - Views</a>
+* <a href="https://github.com/ProKrillz/TodoWork/releases/tag/v2">[v2.0] - Current version</a>
+* <a href="https://github.com/ProKrillz/TodoWork/releases/tag/v1.1">[v1.1] - Views</a>
 * <a href="https://github.com/ProKrillz/TodoWork/releases/tag/v1">[v1.0] - Version 1</a>
 * <a href="https://github.com/ProKrillz/TodoWork/releases/tag/v0.3">[v0.3] - Async</a>
 * <a href="https://github.com/ProKrillz/TodoWork/releases/tag/v0.2">[v0.2] - Crud</a>
@@ -33,8 +39,10 @@ Last updated: 09-03-2023
 ## Upcoming features
 
 * more user message when an error is showen
+* Better style
 
 ## Known issues
 
 * no error message when create a user and both passwords is no equal
 *  no error message when create a task with whitespaces 
+* And many more
