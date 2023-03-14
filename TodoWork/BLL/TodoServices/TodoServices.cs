@@ -11,7 +11,7 @@ public class TodoServices : ITodoServices
     {
         _connection = connection;
     }
-    #region --------------------------------------------- Task ---------------------------------------------
+    #region ------------------------------------------------------ Task ----------------------------------------------------------
     public async Task CreateTaskAsync(DTOTodo todo, Guid userId) =>
         await _connection.CreateTaskAsync(todo, userId);
     public async Task<DTOTodo> GetTaskByIdAsync(Guid id) =>
@@ -30,7 +30,7 @@ public class TodoServices : ITodoServices
         await _connection.DeleteTaskAsync(id);
     #endregion
 
-    #region --------------------------------------------- User ---------------------------------------------
+    #region ------------------------------------------------------ User ----------------------------------------------------------
     public async Task CreateUserAsync(DTOUser user) =>
         await _connection.CreateUserAsync(user);
     public async Task UpdateUserAsync(DTOUser user) =>

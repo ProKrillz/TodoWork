@@ -9,24 +9,21 @@ namespace TodoWork.Domain.SQLConnection;
 public class Connection : IConnection
 {
     private readonly string _connectionString;
-    private readonly SqlConnection _sqlConnection;
-    public Connection(string connectionString)
-    {
+    public Connection(string connectionString) =>
         _connectionString = connectionString;
-        _sqlConnection = new SqlConnection(_connectionString);
-    }
-    #region ---------------------------------------------- Sp ----------------------------------------------
+    
+    #region --------------------------------------------------------- Sp ---------------------------------------------------------
     /// <summary>
     /// Create Stored Procedure Async
     /// </summary>
     /// <param name="StoredProcedure"></param>
     /// <returns></returns>
-    private Task<SqlCommand> CallSpAsync(string StoredProcedure)
+    private Task<SqlCommand> CallSpAsync(string StoredProcedure, SqlConnection con)
     {
         SqlCommand spCommand = new(StoredProcedure)
         {
             CommandType = CommandType.StoredProcedure,
-            Connection = _sqlConnection
+            Connection = con
         };
         return Task.FromResult(spCommand);
     }
@@ -35,18 +32,18 @@ public class Connection : IConnection
     /// </summary>
     /// <param name="StoredProcedure"></param>
     /// <returns></returns>
-    private SqlCommand CallSp(string StoredProcedure)
+    private SqlCommand CallSp(string StoredProcedure, SqlConnection con)
     {
         SqlCommand spCommand = new(StoredProcedure)
         {
             CommandType = CommandType.StoredProcedure,
-            Connection = _sqlConnection
+            Connection = con
         };
         return spCommand;
     }
     #endregion
 
-    #region  ------------------------------------------- Mapping -------------------------------------------
+    #region ------------------------------------------------------ Mapping -------------------------------------------------------
     /// <summary>
     /// Mappping object
     /// </summary>
@@ -54,7 +51,7 @@ public class Connection : IConnection
     /// <returns></returns>
     private DTOTodo TodoMappingToDTOTodo(Todo todo)
     {
-        return new DTOTodo()
+        return new()
         {
             Id = todo.Id,
             UserId = todo.UserId,
@@ -72,7 +69,7 @@ public class Connection : IConnection
     /// <returns></returns>
     private Todo DTOTodoMappingToTodo(DTOTodo todo)
     {
-        return new Todo()
+        return new()
         {
             Id = todo.Id,
             UserId = todo.UserId,
@@ -90,7 +87,7 @@ public class Connection : IConnection
     /// <returns></returns>
     private DTOUser UserMappingDTOUser(User user)
     {
-        return new DTOUser()
+        return new()
         {
             Id = user.Id,
             Name = user.Name,
@@ -105,7 +102,7 @@ public class Connection : IConnection
     /// <returns></returns>
     private User DTOUserMappingUser(DTOUser user)
     {
-        return new User()
+        return new()
         {
             Id = user.Id,
             Name = user.Name,
@@ -115,38 +112,34 @@ public class Connection : IConnection
     }
     #endregion
 
-    #region --------------------------------------------- Task ---------------------------------------------
+    #region -------------------------------------------------------- Task --------------------------------------------------------
     public async Task CreateTaskAsync(DTOTodo dtoTodo, Guid userId)
     {
         Todo todo = DTOTodoMappingToTodo(dtoTodo);
-        SqlCommand cmd = await CallSpAsync("AddTask");
-        cmd.Parameters.AddWithValue("@TaskId", todo.Id);
-        cmd.Parameters.AddWithValue("@Titel", todo.Title);
-        cmd.Parameters.AddWithValue("@Description", todo.Description);
-        cmd.Parameters.AddWithValue("@Priorities", todo.TaskPriority);
-        cmd.Parameters.AddWithValue("@Created", todo.CreatedDate);
-        cmd.Parameters.AddWithValue("@UserId", userId);
-        try
+        using (SqlConnection con = new(_connectionString))
         {
-            _sqlConnection.Open();
+            SqlCommand cmd = await CallSpAsync("AddTask", con);
+            cmd.Parameters.AddWithValue("@TaskId", todo.Id);
+            cmd.Parameters.AddWithValue("@Titel", todo.Title);
+            cmd.Parameters.AddWithValue("@Description", todo.Description);
+            cmd.Parameters.AddWithValue("@Priorities", todo.TaskPriority);
+            cmd.Parameters.AddWithValue("@Created", todo.CreatedDate);
+            cmd.Parameters.AddWithValue("@UserId", userId);
+            con.Open();
             cmd.ExecuteNonQuery();
-        }
-        finally
-        {
-            _sqlConnection.Close();
         }
     }
     public async Task<DTOTodo> GetTaskByIdAsync(Guid id)
     {
-        SqlCommand cmd = await CallSpAsync("GetTaskById");
-        cmd.Parameters.AddWithValue("@TaskId", id);
-        try
+        using (SqlConnection con = new(_connectionString))
         {
-            _sqlConnection.Open();
+            SqlCommand cmd = await CallSpAsync("GetTaskById", con);
+            cmd.Parameters.AddWithValue("@TaskId", id);
+            con.Open();
             SqlDataReader reader = cmd.ExecuteReader();
             while (reader.Read())
             {
-                return TodoMappingToDTOTodo(new Todo()
+                return TodoMappingToDTOTodo(new()
                 {
                     Id = Guid.Parse(reader.GetString("task_id")),
                     UserId = Guid.Parse(reader.GetString("users_id")),
@@ -156,22 +149,21 @@ public class Connection : IConnection
                     CreatedDate = reader.GetDateTime("task_created")
                 });
             }
-            return null;
+            return new();
         }
-        finally { _sqlConnection.Close(); }
     }
     public async Task<List<DTOTodo>> GetAllCompletedTaskByUserIdAsync(Guid id)
     {
-        SqlCommand cmd = await CallSpAsync("GetAllCompletedTaskByUserId");
-        cmd.Parameters.AddWithValue("@UserId", id);
-        try
+        using (SqlConnection con = new(_connectionString))
         {
-            _sqlConnection.Open();
+            SqlCommand cmd = await CallSpAsync("GetAllCompletedTaskByUserId", con);
+            cmd.Parameters.AddWithValue("@UserId", id);
+            con.Open();
             SqlDataReader reader = cmd.ExecuteReader();
             List<DTOTodo> list = new();
             while (reader.Read())
             {
-                list.Add(TodoMappingToDTOTodo(new Todo()
+                list.Add(TodoMappingToDTOTodo(new()
                 {
                     Id = Guid.Parse(reader.GetString("task_id")),
                     UserId = Guid.Parse(reader.GetString("users_id")),
@@ -184,115 +176,104 @@ public class Connection : IConnection
             }
             return list;
         }
-        finally { _sqlConnection.Close(); }
     }
     public async Task UpdateTaskAsync(DTOTodo todox)
     {
         Todo todo = DTOTodoMappingToTodo(todox);
-        SqlCommand cmd = await CallSpAsync("UpdateTask");
-        cmd.Parameters.AddWithValue("@TaskId", todo.Id);
-        cmd.Parameters.AddWithValue("@Titel", todo.Title);
-        cmd.Parameters.AddWithValue("@Description", todo.Description);
-        cmd.Parameters.AddWithValue("@PrioritiesId", todo.TaskPriority);
-        try
+        using (SqlConnection con = new(_connectionString))
         {
-            _sqlConnection.Open();
+            SqlCommand cmd = await CallSpAsync("UpdateTask", con);
+            cmd.Parameters.AddWithValue("@TaskId", todo.Id);
+            cmd.Parameters.AddWithValue("@Titel", todo.Title);
+            cmd.Parameters.AddWithValue("@Description", todo.Description);
+            cmd.Parameters.AddWithValue("@PrioritiesId", todo.TaskPriority);
+            con.Open();
             cmd.ExecuteNonQuery();
-        }
-        finally
-        {
-            _sqlConnection.Close();
         }
     }
     public async Task CompletTaskAsync(Guid id)
     {
-        SqlCommand cmd = await CallSpAsync("CompletTask");
-        cmd.Parameters.AddWithValue("@TaskId", id);
-        try
+        using (SqlConnection con = new(_connectionString))
         {
-            _sqlConnection.Open();
+            SqlCommand cmd = await CallSpAsync("CompletTask", con);
+            cmd.Parameters.AddWithValue("@TaskId", id);
+            con.Open();
             cmd.ExecuteNonQuery();
         }
-        finally { _sqlConnection.Close(); }
     }
     public async Task DeleteTaskAsync(Guid id)
     {
-        SqlCommand cmd = await CallSpAsync("DeleteTask");
-        cmd.Parameters.AddWithValue("@TaskId", id);
-        try
+        using (SqlConnection con = new(_connectionString))
         {
-            _sqlConnection.Open();
+            SqlCommand cmd = await CallSpAsync("DeleteTask", con);
+            cmd.Parameters.AddWithValue("@TaskId", id);
+            con.Open();
             cmd.ExecuteNonQuery();
         }
-        finally { _sqlConnection.Close(); }
     }
     public async Task UnCompletedTaskAsync(Guid id)
     {
-        SqlCommand cmd = await CallSpAsync("UnCompletedTask");
-        cmd.Parameters.AddWithValue("@TaskId", id);
-        try
+        using (SqlConnection con = new(_connectionString))
         {
-            _sqlConnection.Open();
+            SqlCommand cmd = await CallSpAsync("UnCompletedTask", con);
+            cmd.Parameters.AddWithValue("@TaskId", id);
+            con.Open();
             cmd.ExecuteNonQuery();
         }
-        finally { _sqlConnection.Close(); }
     }
     #endregion
 
-    #region --------------------------------------------- User --------------------------------------------- 
+    #region -------------------------------------------------------- User -------------------------------------------------------- 
     public async Task CreateUserAsync(DTOUser dtoUser)
     {
         User user = DTOUserMappingUser(dtoUser);
-        SqlCommand cmd = await CallSpAsync("CreateUser");
-        cmd.Parameters.AddWithValue("@UserId", user.Id);
-        cmd.Parameters.AddWithValue("@Name", user.Name);
-        cmd.Parameters.AddWithValue("@Email", user.Email);
-        cmd.Parameters.AddWithValue("@Password", user.Password);
-        try
+        using (SqlConnection con = new(_connectionString))
         {
-            _sqlConnection.Open();
+            SqlCommand cmd = await CallSpAsync("CreateUser", con);
+            cmd.Parameters.AddWithValue("@UserId", user.Id);
+            cmd.Parameters.AddWithValue("@Name", user.Name);
+            cmd.Parameters.AddWithValue("@Email", user.Email);
+            cmd.Parameters.AddWithValue("@Password", user.Password);
+            con.Open();
             cmd.ExecuteNonQuery();
         }
-        finally { _sqlConnection.Close(); }
     }
     public async Task UpdateUserAsync(DTOUser dtoUser)
     {
         User user = DTOUserMappingUser(dtoUser);
-        SqlCommand cmd = await CallSpAsync("UpdateUser");
-        cmd.Parameters.AddWithValue("@UserId", user.Id);
-        cmd.Parameters.AddWithValue("@Name", user.Name);
-        cmd.Parameters.AddWithValue("@Email", user.Email);
-        cmd.Parameters.AddWithValue("@Password", user.Password);
-        try
+        using (SqlConnection con = new(_connectionString))
         {
-            _sqlConnection.Open();
+            SqlCommand cmd = await CallSpAsync("UpdateUser", con);
+            cmd.Parameters.AddWithValue("@UserId", user.Id);
+            cmd.Parameters.AddWithValue("@Name", user.Name);
+            cmd.Parameters.AddWithValue("@Email", user.Email);
+            cmd.Parameters.AddWithValue("@Password", user.Password);
+            con.Open();
             cmd.ExecuteNonQuery();
         }
-        finally { _sqlConnection.Close(); }
     }
     public async Task DeleteUserAsync(Guid id)
     {
-        SqlCommand cmd = await CallSpAsync("DeleteUser");
-        cmd.Parameters.AddWithValue("@UserId", id);
-        try
+        using (SqlConnection con = new(_connectionString))
         {
-            _sqlConnection.Open();
+            SqlCommand cmd = await CallSpAsync("DeleteUser", con);
+            cmd.Parameters.AddWithValue("@UserId", id);
+            con.Open();
             cmd.ExecuteNonQuery();
         }
-        finally { _sqlConnection.Close(); }
     }
     public async Task<DTOUser> UserLoginAsync(string email, string password)
     {
-        SqlCommand cmd = await CallSpAsync("UserLogin");
-        cmd.Parameters.AddWithValue("@Email", email);
-        cmd.Parameters.AddWithValue("@Password", password);
-        try
+        using (SqlConnection con = new(_connectionString))
         {
-            _sqlConnection.Open();
+            SqlCommand cmd = await CallSpAsync("UserLogin", con);
+            cmd.Parameters.AddWithValue("@Email", email);
+            cmd.Parameters.AddWithValue("@Password", password);
+            con.Open();
             SqlDataReader myReader = cmd.ExecuteReader();
             while (myReader.Read())
             {
-                return UserMappingDTOUser(new User()
+                return UserMappingDTOUser(new()
                 {
                     Id = Guid.Parse(myReader.GetString("users_id")),
                     Name = myReader.GetString("users_name"),
@@ -300,21 +281,20 @@ public class Connection : IConnection
                     Password = password
                 });
             }
-            return null;
+            return new();
         }
-        finally { _sqlConnection.Close(); }
     }
     public async Task<DTOUser> GetUserByEmailAsync(string email)
     {
-        SqlCommand cmd = await CallSpAsync("GetUserByEmail");
-        cmd.Parameters.AddWithValue("@Email", email);
-        try
+        using (SqlConnection con = new(_connectionString))
         {
-            _sqlConnection.Open();
+            SqlCommand cmd = await CallSpAsync("GetUserByEmail", con);
+            cmd.Parameters.AddWithValue("@Email", email);
+            con.Open();
             SqlDataReader myReader = cmd.ExecuteReader();
             while (myReader.Read())
             {
-                return UserMappingDTOUser(new User()
+                return UserMappingDTOUser(new()
                 {
                     Id = Guid.Parse(myReader.GetString("users_id")),
                     Name = myReader.GetString("users_name"),
@@ -322,22 +302,21 @@ public class Connection : IConnection
                     Password = myReader.GetString("users_password")
                 });
             }
+            return new();
         }
-        finally { _sqlConnection.Close(); }
-        return null;
     }
     public List<DTOTodo> GetTodosByUserId(Guid id)
     {
-        SqlCommand cmd = CallSp("GetAllTaskById");
-        cmd.Parameters.AddWithValue("@UserId", id);
-        try
+        using (SqlConnection con = new(_connectionString))
         {
-            _sqlConnection.Open();
+            SqlCommand cmd = CallSp("GetAllTaskById", con);
+            cmd.Parameters.AddWithValue("@UserId", id);
+            con.Open();
             SqlDataReader myReader = cmd.ExecuteReader();
             List<DTOTodo> list = new();
             while (myReader.Read())
             {
-                list.Add(TodoMappingToDTOTodo(new Todo()
+                list.Add(TodoMappingToDTOTodo(new()
                 {
                     Id = Guid.Parse(myReader.GetString("task_id")),
                     UserId = Guid.Parse(myReader.GetString("users_id")),
@@ -349,7 +328,6 @@ public class Connection : IConnection
             }
             return list;
         }
-        finally { _sqlConnection.Close(); }
     }
     #endregion
 }

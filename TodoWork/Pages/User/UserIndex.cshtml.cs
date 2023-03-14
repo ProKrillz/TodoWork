@@ -7,10 +7,9 @@ namespace TodoWork.Pages.User;
 public class UserIndexModel : PageModel
 {
     private readonly ITodoServices _todoServices;
-    public UserIndexModel(ITodoServices todoServices)
-    {
+    public UserIndexModel(ITodoServices todoServices) =>
         _todoServices = todoServices;
-    }
+
     [BindProperty]
     public DTOUser User { get; set; }
     [BindProperty]
@@ -39,7 +38,6 @@ public class UserIndexModel : PageModel
         }, UserId);
         User = await _todoServices.GetUserByEmailAsync(HttpContext.Session.GetString("UserEmail"));
         User.Todos = _todoServices.GetTodosByUserId(UserId);
-
     }
     public async Task OnPostDelete()
     {

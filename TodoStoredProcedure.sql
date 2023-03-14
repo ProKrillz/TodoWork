@@ -114,7 +114,6 @@ AS
 SELECT task_id, users_id, task_title, task_description, task_created, priorities_id
 FROM GetAllTaskView 
 WHERE users_id = @UserId
-AND task_deleted = 0
 AND task_completed IS NULL
 GO
 

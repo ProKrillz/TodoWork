@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Configuration;
 using TodoWork.BLL.TodoServices;
 using TodoWork.Domain.SQLConnection;
 
@@ -10,9 +9,7 @@ var connectionString = Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddRazorPages().Services.AddSingleton<IConnection>(new Connection(connectionString))
 .AddRazorPages().Services.AddSingleton<ITodoServices, TodoServices>()
-.AddSession(option => { option.IdleTimeout = TimeSpan.FromMinutes(30); })
-.AddMemoryCache();
-
+.AddSession(option => { option.IdleTimeout = TimeSpan.FromMinutes(30); });
 
 var app = builder.Build();
 
@@ -26,9 +23,7 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
-
 app.UseAuthorization();
 app.UseSession();
 app.MapRazorPages();

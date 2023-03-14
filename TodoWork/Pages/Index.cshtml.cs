@@ -31,9 +31,7 @@ public class IndexModel : PageModel
     public IActionResult OnGet()
     {
         if (!string.IsNullOrEmpty(HttpContext.Session.GetString("UserEmail")))
-        {
             return RedirectToPage("/User/UserIndex");
-        }
         return Page();
     }
     public async Task<IActionResult> OnPostLogin()
@@ -50,7 +48,7 @@ public class IndexModel : PageModel
     {
         if (CreatePassword == CreatePassword2)
         {
-            User = new DTOUser()
+            User = new()
             {
                 Id = Guid.NewGuid(),
                 Name = Name,
@@ -60,5 +58,4 @@ public class IndexModel : PageModel
             _todoServices.CreateUserAsync(User);
         }
     }
-
 }
