@@ -23,7 +23,7 @@ public class IndexModel : PageModel
     public string CreateEmail { get; set; }
     [BindProperty, MaxLength(50), Required]
     public string Name { get; set; }
-    [BindProperty, MaxLength(100)]
+    [BindProperty, MaxLength(50)]
     public string CreatePassword { get; set; }
     [BindProperty, MaxLength(100), Compare(nameof(CreatePassword), ErrorMessage = "Begge password skal være ens")]
     public string CreatePassword2 { get; set; }
@@ -37,7 +37,7 @@ public class IndexModel : PageModel
     public async Task<IActionResult> OnPostLogin()
     {
         User = await _todoServices.UserLoginAsync(Email, Password);
-        if (User != null)
+        if (User.Email != null)
         {
             HttpContext.Session.SetSessionString(User.Email, "UserEmail");
             return RedirectToPage("/User/UserIndex");
@@ -50,7 +50,6 @@ public class IndexModel : PageModel
         {
             User = new()
             {
-                Id = Guid.NewGuid(),
                 Name = Name,
                 Email = CreateEmail,
                 Password = CreatePassword2,

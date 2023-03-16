@@ -7,11 +7,11 @@ namespace TodoWork.Pages.User;
 public class UserIndexModel : PageModel
 {
     private readonly ITodoServices _todoServices;
-    public UserIndexModel(ITodoServices todoServices) =>
+    public UserIndexModel(ITodoServices todoServices) => 
         _todoServices = todoServices;
 
     [BindProperty]
-    public DTOUser User { get; set; }
+    public new DTOUser User { get; set; }
     [BindProperty]
     public DTOTodo Todo { get; set; }
     [BindProperty]
@@ -30,7 +30,6 @@ public class UserIndexModel : PageModel
     {
         await _todoServices.CreateTaskAsync(new DTOTodo()
         {
-            Id = Guid.NewGuid(),
             Title = Todo.Title,
             Description = Todo.Description,
             TaskPriority = Todo.TaskPriority,

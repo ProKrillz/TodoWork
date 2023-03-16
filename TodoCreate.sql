@@ -14,7 +14,7 @@ GO
 
 CREATE TABLE Users
 (
-	users_id NVARCHAR(255) NOT NULL PRIMARY KEY,
+	users_id UNIQUEIDENTIFIER PRIMARY KEY default NEWID(),
 	users_name NVARCHAR(50),
 	users_email NVARCHAR(50) UNIQUE,
 	users_password NVARCHAR(MAX)
@@ -24,17 +24,17 @@ GO
 CREATE TABLE Priorities
 (
 	priorities_id INT IDENTITY(1,1) PRIMARY KEY,
-	priorities_name NVARCHAR(MAX)
+	priorities_name NVARCHAR(25)
 )
 GO
 
 CREATE TABLE Task
 (
-	task_id NVARCHAR(255) NOT NULL PRIMARY KEY,
+	task_id UNIQUEIDENTIFIER PRIMARY KEY default NEWID(),
 	priorities_id INT NOT NULL REFERENCES Priorities(priorities_id),
-	users_id NVARCHAR(255) NOT NULL REFERENCES Users(users_id),
-	task_title NVARCHAR(MAX),
-	task_description NVARCHAR(MAX),
+	users_id UNIQUEIDENTIFIER NOT NULL REFERENCES Users(users_id),
+	task_title NVARCHAR(25),
+	task_description NVARCHAR(100),
 	task_created DATETIME,
 	task_completed DATETIME
 )

@@ -12,28 +12,27 @@ FROM Task
 GO
 
 CREATE OR ALTER PROCEDURE AddTask
-@TaskId NVARCHAR(255),
-@UserId NVARCHAR(255),
+@UserId CHAR(36),
 @Titel NVARCHAR(50),
 @Description NVARCHAR(MAX),
 @Priorities INT,
 @Created DATETIME
 AS
 INSERT INTO Task
-(task_id, priorities_id, users_id, task_title, task_description, task_created, task_completed)
+(priorities_id, users_id, task_title, task_description, task_created, task_completed)
 VALUES
-(@TaskId, @Priorities, @UserId, @Titel, @Description, @Created, null)
+(@Priorities, @UserId, @Titel, @Description, @Created, null)
 GO
 
 CREATE OR ALTER PROCEDURE DeleteTask
-@TaskId NVARCHAR(255)
+@TaskId CHAR(36)
 AS
 DELETE FROM Task
 WHERE task_id = @TaskId
 GO
 
 CREATE OR ALTER PROCEDURE UpdateTask
-@TaskId NVARCHAR(255),
+@TaskId CHAR(36),
 @Titel NVARCHAR(50),
 @Description NVARCHAR(255),
 @PrioritiesId INT
@@ -46,7 +45,7 @@ WHERE task_id = @TaskId
 GO
 
 CREATE OR ALTER PROCEDURE CompletTask
-@TaskId NVARCHAR(255)
+@TaskId CHAR(36)
 AS
 UPDATE Task
 SET task_completed = GETDATE()
@@ -54,7 +53,7 @@ WHERE task_id = @TaskId
 GO
 
 CREATE OR ALTER PROCEDURE GetTaskById
-@TaskId NVARCHAR(255)
+@TaskId CHAR(36)
 AS
 SELECT *
 FROM GetAllTaskView
@@ -62,7 +61,7 @@ WHERE task_id = @TaskId
 GO
 
 CREATE OR ALTER PROCEDURE UnCompletedTask
-@TaskId NVARCHAR(255)
+@TaskId CHAR(36)
 AS
 UPDATE Task
 SET task_completed = NULL
@@ -72,20 +71,19 @@ GO
 --------------------------------------------------- Users procedure ---------------------------------------------------
 
 CREATE OR ALTER PROCEDURE CreateUser
-@UserId NVARCHAR(255),
 @Name NVARCHAR(50),
 @Email NVARCHAR(50),
 @Password NVARCHAR(MAX)
 AS
 INSERT INTO
 Users
-(users_id, users_email, users_name, users_password)
+(users_email, users_name, users_password)
 VALUES
-(@UserId, @Email, @Name, @Password)
+(@Email, @Name, HASHBYTES('SHA2_512', @Password))
 GO
 
 CREATE OR ALTER PROCEDURE DeleteUser
-@UserId NVARCHAR(255)
+@UserId CHAR(36)
 AS
 DELETE FROM Task
 WHERE users_id = @UserId
@@ -94,7 +92,7 @@ WHERE users_id = @UserId
 GO
 
 CREATE OR ALTER PROCEDURE UpdateUser
-@UserId NVARCHAR(255),
+@UserId CHAR(36),
 @Name NVARCHAR(50),
 @Email NVARCHAR(50),
 @Password NVARCHAR(255)
@@ -102,14 +100,14 @@ AS
 UPDATE Users
 SET users_name = @Name,
 users_email = @Email,
-users_password = @Password
+users_password = HASHBYTES('SHA2_512', @Password)
 WHERE users_id = @UserId
 GO 
 
 --------------------------------------------------- User task ---------------------------------------------------
 
 CREATE OR ALTER PROCEDURE GetAllTaskById
-@UserId NVARCHAR(255)
+@UserId CHAR(36)
 AS
 SELECT task_id, users_id, task_title, task_description, task_created, priorities_id
 FROM GetAllTaskView 
@@ -118,7 +116,7 @@ AND task_completed IS NULL
 GO
 
 CREATE OR ALTER PROCEDURE GetAllCompletedTaskByUserId
-@UserId NVARCHAR(255)
+@UserId CHAR(36)
 AS
 SELECT task_id, users_id, task_title, task_description, task_completed, task_created, priorities_id
 FROM GetAllTaskView 
@@ -127,7 +125,7 @@ AND task_completed IS NOT NULL
 GO
 
 CREATE OR ALTER PROCEDURE GetUserByEmail
-@Email NVARCHAR(255)
+@Email NVARCHAR(50)
 AS
 SELECT *
 FROM Users
@@ -141,5 +139,5 @@ AS
 SELECT users_id, users_name
 FROM Users
 WHERE users_email = @Email
-AND users_Password = @Password
+AND users_Password = HASHBYTES('SHA2_512', @Password)
 GO

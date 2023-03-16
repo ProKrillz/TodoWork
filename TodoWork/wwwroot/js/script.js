@@ -17,3 +17,19 @@ exampleModal.addEventListener('show.bs.modal', function (event) {
     inputVaule.value = recipient
     inputVaule2.value = recipient2
 })
+
+// UserIndex
+
+var editUser = document.getElementById("editUser");
+var userName = document.getElementById("userName");
+editUser.style.display = "none";
+userName.onmouseover = function () { mouseHoverIn() }
+editUser.onmouseout = function () { mouseHoverOut() }
+function mouseHoverIn() {
+    editUser.style.display = "block";
+    userName.style.display = "none";
+}
+function mouseHoverOut() {
+    userName.style.display = "block";
+    editUser.style.display = "none";
+}

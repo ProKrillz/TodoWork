@@ -119,7 +119,6 @@ public class Connection : IConnection
         using (SqlConnection con = new(_connectionString))
         {
             SqlCommand cmd = await CallSpAsync("AddTask", con);
-            cmd.Parameters.AddWithValue("@TaskId", todo.Id);
             cmd.Parameters.AddWithValue("@Titel", todo.Title);
             cmd.Parameters.AddWithValue("@Description", todo.Description);
             cmd.Parameters.AddWithValue("@Priorities", todo.TaskPriority);
@@ -141,8 +140,8 @@ public class Connection : IConnection
             {
                 return TodoMappingToDTOTodo(new()
                 {
-                    Id = Guid.Parse(reader.GetString("task_id")),
-                    UserId = Guid.Parse(reader.GetString("users_id")),
+                    Id = reader.GetGuid("task_id"),
+                    UserId = reader.GetGuid("users_id"),
                     Title = reader.GetString("task_title"),
                     Description = reader.GetString("task_description"),
                     TaskPriority = reader.GetInt32("priorities_id"),
@@ -165,8 +164,8 @@ public class Connection : IConnection
             {
                 list.Add(TodoMappingToDTOTodo(new()
                 {
-                    Id = Guid.Parse(reader.GetString("task_id")),
-                    UserId = Guid.Parse(reader.GetString("users_id")),
+                    Id = reader.GetGuid("task_id"),
+                    UserId = reader.GetGuid("users_id"),
                     Title = reader.GetString("task_title"),
                     Description = reader.GetString("task_description"),
                     TaskPriority = reader.GetInt32("priorities_id"),
@@ -230,7 +229,6 @@ public class Connection : IConnection
         using (SqlConnection con = new(_connectionString))
         {
             SqlCommand cmd = await CallSpAsync("CreateUser", con);
-            cmd.Parameters.AddWithValue("@UserId", user.Id);
             cmd.Parameters.AddWithValue("@Name", user.Name);
             cmd.Parameters.AddWithValue("@Email", user.Email);
             cmd.Parameters.AddWithValue("@Password", user.Password);
@@ -275,7 +273,7 @@ public class Connection : IConnection
             {
                 return UserMappingDTOUser(new()
                 {
-                    Id = Guid.Parse(myReader.GetString("users_id")),
+                    Id = myReader.GetGuid("users_id"),
                     Name = myReader.GetString("users_name"),
                     Email = email,
                     Password = password
@@ -296,7 +294,7 @@ public class Connection : IConnection
             {
                 return UserMappingDTOUser(new()
                 {
-                    Id = Guid.Parse(myReader.GetString("users_id")),
+                    Id = myReader.GetGuid("users_id"),
                     Name = myReader.GetString("users_name"),
                     Email = myReader.GetString("users_email"),
                     Password = myReader.GetString("users_password")
@@ -318,8 +316,8 @@ public class Connection : IConnection
             {
                 list.Add(TodoMappingToDTOTodo(new()
                 {
-                    Id = Guid.Parse(myReader.GetString("task_id")),
-                    UserId = Guid.Parse(myReader.GetString("users_id")),
+                    Id = myReader.GetGuid("task_id"),
+                    UserId = myReader.GetGuid("users_id"),
                     Title = myReader.GetString("task_title"),
                     Description = myReader.GetString("task_description"),
                     TaskPriority = myReader.GetInt32("priorities_id"),
