@@ -1,8 +1,11 @@
-﻿@page
+﻿@page "/UserIndex"
 @model TodoWork.Pages.User.UserIndexModel
 @using BLL.DTOModels
 @{
     string bgColor = "";
+    string[] created = new string[] { "Oprettet", "Opgave blev oprettet" };
+    string[] deleted = new string[] { "Slettet", "Opgave blev slettet" };
+    string[] completed = new string[] { "Færdig", "Opgaven er blevet færdig gjort" };
 }
 <header>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom mb-3">
@@ -44,6 +47,18 @@
             @await Component.InvokeAsync("Task", item)
         }
     </details>
+}
+@if (Model.Created)
+{
+    @await Component.InvokeAsync("Toast", created)
+}
+@if (Model.Deleted)
+{
+    @await Component.InvokeAsync("Toast", deleted)
+}
+@if (Model.Completed)
+{
+    @await Component.InvokeAsync("Toast", completed)
 }
 
 @await Component.InvokeAsync("ModalDelete")

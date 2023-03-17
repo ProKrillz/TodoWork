@@ -17,17 +17,19 @@ public class IndexModel : PageModel
     }
     [BindProperty, EmailAddress]
     public string Email { get; set; }
-    [BindProperty]
+    [BindProperty, MaxLength(100), DataType(DataType.Password)]
     public string Password { get; set; }
     [BindProperty, EmailAddress, MaxLength(50), Required]
     public string CreateEmail { get; set; }
     [BindProperty, MaxLength(50), Required]
     public string Name { get; set; }
-    [BindProperty, MaxLength(50)]
+    [BindProperty, MaxLength(100), DataType(DataType.Password)]
     public string CreatePassword { get; set; }
-    [BindProperty, MaxLength(100), Compare(nameof(CreatePassword), ErrorMessage = "Begge password skal være ens")]
+    [BindProperty, MaxLength(100), DataType(DataType.Password), Compare(nameof(CreatePassword), ErrorMessage = "Begge password skal være ens")]
     public string CreatePassword2 { get; set; }
-    public DTOUser User { get; set; }
+    public new DTOUser User { get; set; }
+    public bool Login { get; set; } = true;
+    public bool Created { get; set; } = false;
     public IActionResult OnGet()
     {
         if (!string.IsNullOrEmpty(HttpContext.Session.GetString("UserEmail")))
@@ -42,19 +44,20 @@ public class IndexModel : PageModel
             HttpContext.Session.SetSessionString(User.Email, "UserEmail");
             return RedirectToPage("/User/UserIndex");
         }
+        Login = false;
         return Page();
     }
     public void OnPostCreate()
     {
         if (CreatePassword == CreatePassword2)
         {
-            User = new()
+            _todoServices.CreateUserAsync(new()
             {
                 Name = Name,
                 Email = CreateEmail,
-                Password = CreatePassword2,
-            };
-            _todoServices.CreateUserAsync(User);
+                Password = CreatePassword2
+            });
+            Created = true;
         }
     }
 }

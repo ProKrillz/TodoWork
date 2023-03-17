@@ -2,14 +2,16 @@
 @model IndexModel
 @{
     ViewData["Title"] = "Hjem";
+    string[] login = new string[] { "Login Fejl", "Forkert brugernavn eller password" };
+    string[] created = new string[] { "Oprettet", "Bruger er oprettet" };
 }
 <div class="d-flex justify-content-center mt-5">
-    <form class="form-control w-50" method="post">
+    <form class="form-control w-50 bg-light" method="post">
         <h4>Login</h4>
         <label class="mt-2">Bruger navn</label>
         <input class="form-control mt-2" asp-for="Email" required />
         <label class="mt-2">Adgangskode</label>
-        <input class="form-control mt-2" asp-for="Password" type="password" required />
+        <input class="form-control mt-2" asp-for="Password" required />
         <div class="d-flex justify-content-center mt-3 mb-2">
             <button class="btn btn-primary me-2" asp-page-handler="Login">Login</button>
             <a class="btn btn-primary" data-bs-toggle="modal" href="#exampleModalToggle" role="button">Opret</a>
@@ -31,9 +33,9 @@
                     <label class="form-label">@Html.DisplayNameFor(x => x.User.Name)</label>
                     <input class="form-control" asp-for="Name" required />
                     <label class="form-label me-3">@Html.DisplayNameFor(x => x.User.Password)</label>
-                    <input class="form-control" asp-for="CreatePassword" type="password" required />            
+                    <input class="form-control" asp-for="CreatePassword" type="password" required />
                     <label class="form-label me-3">Gentag @Html.DisplayNameFor(x => x.User.Password)</label>
-                    <input class="form-control" asp-for="CreatePassword2" type="password" required />            
+                    <input class="form-control" asp-for="CreatePassword2" type="password" required />
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-primary mt-3" asp-page-handler="Create">Opret</button>
@@ -42,3 +44,17 @@
         </div>
     </div>
 </div>
+@if (!@Model.Login)
+{
+    @await Component.InvokeAsync("Toast", login)
+}
+@if (@Model.Created)
+{
+    @await Component.InvokeAsync("Toast", created)
+}
+
+<script>
+    var element = document.getElementById("myToast");
+    var myToast = new bootstrap.Toast(element);
+    myToast.show();
+</script>

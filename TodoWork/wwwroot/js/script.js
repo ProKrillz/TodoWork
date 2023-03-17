@@ -1,4 +1,20 @@
-﻿var exampleModal = document.getElementById('DeleteModal')
+﻿// UserIndex
+
+var editUser = document.getElementById("editUser");
+var userName = document.getElementById("userName");
+editUser.style.display = "none";
+userName.onmouseover = function () { mouseHoverIn() }
+editUser.onmouseout = function () { mouseHoverOut() }
+function mouseHoverIn() {
+    editUser.style.display = "block";
+    userName.style.display = "none";
+}
+function mouseHoverOut() {
+    userName.style.display = "block";
+    editUser.style.display = "none";
+}
+
+var exampleModal = document.getElementById('DeleteModal')
 exampleModal.addEventListener('show.bs.modal', function (event) {
     // Button that triggered the modal
     var button = event.relatedTarget
@@ -18,18 +34,6 @@ exampleModal.addEventListener('show.bs.modal', function (event) {
     inputVaule2.value = recipient2
 })
 
-// UserIndex
-
-var editUser = document.getElementById("editUser");
-var userName = document.getElementById("userName");
-editUser.style.display = "none";
-userName.onmouseover = function () { mouseHoverIn() }
-editUser.onmouseout = function () { mouseHoverOut() }
-function mouseHoverIn() {
-    editUser.style.display = "block";
-    userName.style.display = "none";
-}
-function mouseHoverOut() {
-    userName.style.display = "block";
-    editUser.style.display = "none";
-}
+var element = document.getElementById("myToast");
+var myToast = new bootstrap.Toast(element);
+myToast.show();

@@ -1,0 +1,13 @@
+﻿@model string[]
+<div class="container d-flex justify-content-center position-absolute bottom-50">
+
+<div class="toast" id="myToast">
+    <div class="toast-header">
+        <strong class="me-auto"><i class="bi-gift-fill"></i> @Model[0]</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+    </div>
+    <div class="toast-body">
+        @Model[1]
+    </div>
+</div>
+</div>
