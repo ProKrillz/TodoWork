@@ -21,7 +21,7 @@ public class CompletedTodoModel : PageModel
         if (!string.IsNullOrEmpty(HttpContext.Session.GetString("UserEmail")))
         {
             DTOUser user =  await _todoServices.GetUserByEmailAsync(HttpContext.Session.GetString("UserEmail"));
-            CompletedTask = await _todoServices.GetAllCompletedTaskByUserIdAsync(user.Id);
+            CompletedTask = await _todoServices.GetAllCompletedTaskByUserIdAsync(user.users_id);
             return Page();
         }
         return RedirectToPage("/Error/NotFound");

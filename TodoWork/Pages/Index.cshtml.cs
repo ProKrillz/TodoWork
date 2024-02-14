@@ -39,9 +39,9 @@ public class IndexModel : PageModel
     public async Task<IActionResult> OnPostLogin()
     {
         User = await _todoServices.UserLoginAsync(Email, Password);
-        if (User.Email != null)
+        if (User.users_email is not null)
         {
-            HttpContext.Session.SetSessionString(User.Email, "UserEmail");
+            HttpContext.Session.SetSessionString(User.users_email, "UserEmail");
             return RedirectToPage("/User/UserIndex");
         }
         Login = false;
@@ -53,9 +53,9 @@ public class IndexModel : PageModel
         {
             _todoServices.CreateUserAsync(new()
             {
-                Name = Name,
-                Email = CreateEmail,
-                Password = CreatePassword2
+                users_name = Name,
+                users_email = CreateEmail,
+                users_password = CreatePassword2
             });
             Created = true;
         }

@@ -127,9 +127,11 @@ GO
 CREATE OR ALTER PROCEDURE GetUserByEmail
 @Email NVARCHAR(50)
 AS
-SELECT *
-FROM Users
-WHERE users_email = @Email
+BEGIN
+	SELECT users_id, users_name, users_email, users_password
+	FROM Users
+	WHERE users_email = @Email
+END
 GO
 
 CREATE OR ALTER PROCEDURE UserLogin

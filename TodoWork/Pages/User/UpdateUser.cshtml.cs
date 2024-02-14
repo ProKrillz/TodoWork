@@ -32,7 +32,7 @@ namespace TodoWork.Pages.User
         }
         public async Task<IActionResult> OnPostAsync()
         {
-            await _todoServices.DeleteUserAsync(EditUser.Id);
+            await _todoServices.DeleteUserAsync(EditUser.users_id);
             HttpContext.Session.Remove("UserEmail");
             return RedirectToPage("/Index");
         }

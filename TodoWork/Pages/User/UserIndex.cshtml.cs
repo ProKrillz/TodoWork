@@ -26,7 +26,7 @@ public class UserIndexModel : PageModel
         if (!string.IsNullOrEmpty(HttpContext.Session.GetString("UserEmail")))
         {
             User = await _todoServices.GetUserByEmailAsync(HttpContext.Session.GetString("UserEmail"));
-            User.Todos = _todoServices.GetTodosByUserId(User.Id);
+            User.Todos = _todoServices.GetTodosByUserId(User.users_id);
         }
     }
     public async Task OnPostCreate()

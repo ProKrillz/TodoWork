@@ -59,6 +59,7 @@ namespace TestTodo
 
             Assert.NotNull(foundUser);
             Assert.True(foundUser.Id == dtoUser.Id);
+            
 
             mock.Verify(r => r.GetUserByEmailAsync(dtoUser.Email), Times.Once);
         }
@@ -88,7 +89,6 @@ namespace TestTodo
             Assert.True(dtoUser.Id == foundUser.Id);
 
             mock.Verify();
-
         }
     }
 }

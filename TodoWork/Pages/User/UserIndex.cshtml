@@ -17,7 +17,7 @@
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                 <ul class="navbar-nav flex-grow-1">
                     <li class="nav-item">
-                        <a id="userName" class="nav-link text-dark">@Model.User.Name</a>
+                        <a id="userName" class="nav-link text-dark">@Model.User.users_name</a>
                         <a id="editUser" class="nav-link text-dark" asp-area="" asp-page="/User/UpdateUser">Rediger</a>
                     </li>
                     <li>
@@ -72,7 +72,7 @@
             </div>
             <form method="post">
                 <div class="modal-body">
-                    <input asp-for="UserId" value="@Model.User.Id" hidden />
+                    <input asp-for="UserId" value="@Model.User.users_id" hidden />
                     <label class="form-label">@Html.DisplayNameFor(x => x.Todo.Title)</label>
                     <input class="form-control" asp-for="Todo.Title" required />
                     <label class="form-label">@Html.DisplayNameFor(x => x.Todo.Description)</label>

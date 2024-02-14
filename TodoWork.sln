@@ -10,7 +10,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Copyright.txt = Copyright.txt
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestTodo", "TestTodo\TestTodo.csproj", "{6BE328DF-6BB2-4421-86B0-2BA2CC4DAF1F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestTodo", "TestTodo\TestTodo.csproj", "{6BE328DF-6BB2-4421-86B0-2BA2CC4DAF1F}"
+EndProject
+Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "K6StressTest", "K6StressTest\K6StressTest.njsproj", "{D9A5C746-9DFC-4F7B-901E-D846E1477865}"
+EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "LocustTest", "LocustTest\LocustTest.pyproj", "{313B33F5-7BDE-4B75-A04F-6029EE5296E3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,6 +30,12 @@ Global
 		{6BE328DF-6BB2-4421-86B0-2BA2CC4DAF1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6BE328DF-6BB2-4421-86B0-2BA2CC4DAF1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6BE328DF-6BB2-4421-86B0-2BA2CC4DAF1F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D9A5C746-9DFC-4F7B-901E-D846E1477865}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9A5C746-9DFC-4F7B-901E-D846E1477865}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9A5C746-9DFC-4F7B-901E-D846E1477865}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9A5C746-9DFC-4F7B-901E-D846E1477865}.Release|Any CPU.Build.0 = Release|Any CPU
+		{313B33F5-7BDE-4B75-A04F-6029EE5296E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{313B33F5-7BDE-4B75-A04F-6029EE5296E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

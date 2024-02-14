@@ -1,0 +1,16 @@
+{
+  "name": "k6-stress-test",
+  "version": "0.0.0",
+  "description": "K6StressTest",
+  "main": "app.js",
+  "author": {
+    "name": ""
+  },
+  "devDependencies": {
+    "eslint": "^8.21.0"
+  },
+  "eslintConfig": {},
+  "dependencies": {
+    "k6": "^0.0.0"
+  }
+}

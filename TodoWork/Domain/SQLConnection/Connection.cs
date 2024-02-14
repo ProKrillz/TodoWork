@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using Dapper;
+using Microsoft.Data.SqlClient;
 using System.Data;
 using TodoWork.BLL.DTOModels;
 using TodoWork.Domain.Entities;
@@ -89,10 +90,10 @@ public class Connection : IConnection
     {
         return new()
         {
-            Id = user.Id,
-            Name = user.Name,
-            Email = user.Email,
-            Password = user.Password
+            users_id = user.Id,
+            users_name = user.Name,
+            users_email = user.Email,
+            users_password = user.Password
         };
     }
     /// <summary>
@@ -104,10 +105,10 @@ public class Connection : IConnection
     {
         return new()
         {
-            Id = user.Id,
-            Name = user.Name,
-            Email = user.Email,
-            Password = user.Password
+            Id = user.users_id,
+            Name = user.users_name,
+            Email = user.users_email,
+            Password = user.users_password
         };
     }
     #endregion
@@ -286,21 +287,16 @@ public class Connection : IConnection
     {
         using (SqlConnection con = new(_connectionString))
         {
-            SqlCommand cmd = await CallSpAsync("GetUserByEmail", con);
-            cmd.Parameters.AddWithValue("@Email", email);
+            //SqlCommand cmd = await CallSpAsync("GetUserByEmail", con);
+            //cmd.Parameters.AddWithValue("@Email", email);
             con.Open();
-            SqlDataReader myReader = cmd.ExecuteReader();
-            while (myReader.Read())
-            {
-                return UserMappingDTOUser(new()
-                {
-                    Id = myReader.GetGuid("users_id"),
-                    Name = myReader.GetString("users_name"),
-                    Email = myReader.GetString("users_email"),
-                    Password = myReader.GetString("users_password")
-                });
-            }
-            return new();
+            DynamicParameters parameters = new DynamicParameters();
+            parameters.Add("Email", email);
+            DTOUser foundUser = new();
+            foundUser = await con.QueryFirstOrDefaultAsync<DTOUser>("GetUserByEmail", new { Email = email }, commandType: CommandType.StoredProcedure);
+          
+ 
+            return foundUser;
         }
     }
     public List<DTOTodo> GetTodosByUserId(Guid id)
